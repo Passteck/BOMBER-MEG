@@ -4,3 +4,11 @@
   background-color: green;
   border-radius: 50%;
 }
+
+.cage {
+  overflow: hidden;
+  height: 700px;
+  width: 700px;
+  background-color: aliceblue;
+  border: 1px solid black;
+}
