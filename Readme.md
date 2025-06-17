@@ -8,7 +8,7 @@
 - [ ] les obstacles (fixe ou random)
 - [ ] le joueur
   - [x] déplacement flèches directionnelles
-  - [ ] limité les déplacement dans la fenêtre
+  - [x] limité les déplacement dans la fenêtre
 - [ ] les ennemis (déplacement aléatoire)
 - [ ] bombe
 - [ ] collision (obstacle, joueur, ennemis)
