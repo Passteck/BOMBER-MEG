@@ -2,7 +2,8 @@ document.addEventListener("keydown", function (e) {
   document.getElementById("output").innerHTML = "Vous avez pressé : " + e.key;
 });
 
-const size = 20;
+const size = 30;
+const cagesize = 690;
 
 const cage = document.querySelector(".cage");
 const sprite = document.querySelector(".sprite");
@@ -17,10 +18,15 @@ window.addEventListener("load", () => {
   sprite.style.top = "0px";
 });
 
+// Ajout de spawn aleatoire pour l'ennemie
+const getrandomvalue = (max) => {
+  return Math.floor(Math.random() * max);
+};
 window.addEventListener("load", () => {
+  const grid_steps = cagesize / size;
   enemy.style.position = "absolute";
-  enemy.style.left = "60px";
-  enemy.style.top = "20px";
+  enemy.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemy.style.top = getrandomvalue(grid_steps) * size + "px";
 });
 
 // Gestion des déplacements du joueur
@@ -36,7 +42,7 @@ window.addEventListener("keydown", (e) => {
       break;
 
     case "ArrowRight":
-      newleft = Math.min(680, left + moveBy);
+      newleft = Math.min(660, left + moveBy);
       break;
 
     case "ArrowUp":
@@ -44,7 +50,7 @@ window.addEventListener("keydown", (e) => {
       break;
 
     case "ArrowDown":
-      newtop = Math.min(680, top + moveBy);
+      newtop = Math.min(660, top + moveBy);
       break;
   }
 
@@ -62,8 +68,8 @@ const placeBomb = () => {
     const spriterect = sprite.getBoundingClientRect();
     const cagerect = cage.getBoundingClientRect();
     boom.style.position = "relative";
-    boom.style.left = `${spriterect.left - cagerect.left}px`;
-    boom.style.top = `${spriterect.top - cagerect.top}px`;
+    boom.style.left = `${spriterect.left - cagerect.left - 1}px`;
+    boom.style.top = `${spriterect.top - cagerect.top - 1}px`;
 
     cage.appendChild(boom);
 

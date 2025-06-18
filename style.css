@@ -1,38 +1,44 @@
+:root {
+  --size: 30px;
+}
+
 body {
+  background: #222;
+  color: #fafafa;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .sprite {
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle, #00ff00, #006400); /* Layered green */
-  box-shadow: 0 0 5px #0f0; /* Glow effect */
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #00ff00, #006400); 
+  box-shadow: 0 0 5px #0f0;
 }
 
 .enemy {
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle, #ff0000, #8b0000); /* Deep red gradient */
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #ff0000, #8b0000); 
   animation: float 2s infinite alternate;
 }
 
 .cage {
   position: relative;
   overflow: hidden;
-  height: 700px;
-  width: 700px;
+  height: 691px;
+  width: 691px;
   background-image: linear-gradient(#ccc 1px, transparent 1px),
     linear-gradient(90deg, #ccc 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-size: var(--size) var(--size);
   border: 1px solid black;
 }
 
 .boom {
-  width: 20px;
-  height: 20px;
+  width: var(--size);
+  height: var(--size);
   background: black;
   border-radius: 50%;
   background: radial-gradient(circle, #ff0000, #ff8c00, #ffff00);
