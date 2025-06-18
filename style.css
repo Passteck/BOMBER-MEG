@@ -1,15 +1,22 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .sprite {
   width: 20px;
   height: 20px;
-  background-color: green;
-  border-radius: 50%;
+  background: radial-gradient(circle, #00ff00, #006400); /* Layered green */
+  box-shadow: 0 0 5px #0f0; /* Glow effect */
 }
 
 .enemy {
   width: 20px;
   height: 20px;
-  background-color: red;
-  border-radius: 50%;
+  background: radial-gradient(circle, #ff0000, #8b0000); /* Deep red gradient */
+  animation: float 2s infinite alternate;
 }
 
 .cage {
@@ -17,7 +24,9 @@
   overflow: hidden;
   height: 700px;
   width: 700px;
-  background-color: aliceblue;
+  background-image: linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: 20px 20px;
   border: 1px solid black;
 }
 
@@ -26,7 +35,8 @@
   height: 20px;
   background: black;
   border-radius: 50%;
-  animation: pulse 1s infinite;
+  background: radial-gradient(circle, #ff0000, #ff8c00, #ffff00);
+  animation: pulse 0.5s infinite, colorshift 0.2s infinite;
 }
 
 @keyframes pulse {
@@ -38,5 +48,14 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes colorshift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
   }
 }
