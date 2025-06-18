@@ -5,10 +5,38 @@
   border-radius: 50%;
 }
 
+.enemy {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+}
+
 .cage {
+  position: relative;
   overflow: hidden;
   height: 700px;
   width: 700px;
   background-color: aliceblue;
   border: 1px solid black;
+}
+
+.boom {
+  width: 20px;
+  height: 20px;
+  background: black;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
