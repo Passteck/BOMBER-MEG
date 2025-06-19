@@ -55,6 +55,8 @@ setInterval(() => {
   enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
 }, 2000);
 
+//
+
 // Gestion des déplacements du joueur
 window.addEventListener("keydown", (e) => {
   let left = parseInt(sprite.style.left) || 0;
@@ -87,6 +89,7 @@ window.addEventListener("keydown", (e) => {
 });
 
 // Gestion de la bombe
+
 const placeBomb = () => {
   if (!boom) {
     boom = document.createElement("div");
@@ -96,10 +99,29 @@ const placeBomb = () => {
     boom.style.position = "relative";
     boom.style.left = `${spriterect.left - cagerect.left - 1}px`;
     boom.style.top = `${spriterect.top - cagerect.top - 1}px`;
-
     cage.appendChild(boom);
 
+    const spawnExplode = () => {
+      const megumin = document.createElement("div");
+      megumin.className = "explosion";
+      const megurect = boom.getBoundingClientRect();
+      megumin.style.position = "relative";
+      megumin.style.left = `${megurect.left - cagerect.left}px`;
+      megumin.style.top = `${megurect.top - cagerect.top}px`;
+      cage.appendChild(megumin);
+      setTimeout(() => megumin.remove(), 500);
+    };
+
+    // Ajout de dommage aux bombs
+    boom.dataset.damage = 2;
+    boom.dataset.range = 4;
+
+    const explode = () => {
+      // remplir la fonction pour la destrution
+    };
+
     setTimeout(() => {
+      explode(spawnExplode);
       boom.remove();
       boom = null;
     }, 3000);
@@ -116,21 +138,34 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// Génération de murs
+window.addEventListener("load", () => {
+  for (let i = 0; i < 900; i++) {
+    const wall = document.createElement("div");
+    wall.className = "wall";
+    wall.dataset.health = 2;
+    wall.style.left = `${Math.floor(Math.random() * 25) * 30}px`;
+    wall.style.top = `${Math.floor(1 + Math.random() * 25) * 30}px`;
+    cage.appendChild(wall);
+  }
+});
+
 // Gestion des collision
 
 const collisionElements = () => {
   return {
     bombs: document.querySelectorAll(".boom"),
-    enemies: document.querySelectorAll(".enemy"),
+    // enemies: document.querySelector(".enemy", ".enemytwo", ".enemythree", ".enemyfour"),
+    walls: document.querySelectorAll(".wall"),
   };
 };
 
 const checkForCollision = (x, y) => {
-  const { bombs, enemies } = collisionElements();
+  const { bombs, walls } = collisionElements();
   const playerSize = size;
 
   for (const bomb of bombs) {
-    const bombarect = bomb.getBoundingClientRect();
+    // const bombarect = bomb.getBoundingClientRect();
     if (
       bomb.offsetLeft < x + playerSize &&
       bomb.offsetLeft + bomb.offsetWidth > x &&
@@ -141,13 +176,25 @@ const checkForCollision = (x, y) => {
     }
   }
 
-  for (const enemy of enemies) {
-    const enemyrect = enemy.getBoundingClientRect();
+  // for (const enemy of enemies) {
+  //   // const enemyrect = enemy.getBoundingClientRect();
+  //   if (
+  //     enemy.offsetLeft < x + playerSize &&
+  //     enemy.offsetLeft + enemy.offsetWidth > x &&
+  //     enemy.offsetTop < y + playerSize &&
+  //     enemy.offsetTop + enemy.offsetHeight > y
+  //   ) {
+  //     return true;
+  //   }
+  // }
+
+  for (const wall of walls) {
+    // const wallrect = wall.getBoundingClientRect();
     if (
-      enemy.offsetLeft < x + playerSize &&
-      enemy.offsetLeft + enemy.offsetWidth > x &&
-      enemy.offsetTop < y + playerSize &&
-      enemy.offsetTop + enemy.offsetHeight > y
+      wall.offsetLeft < x + playerSize &&
+      wall.offsetLeft + wall.offsetWidth > x &&
+      wall.offsetTop < y + playerSize &&
+      wall.offsetTop + wall.offsetHeight > y
     ) {
       return true;
     }

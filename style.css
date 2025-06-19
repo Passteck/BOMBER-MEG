@@ -11,19 +11,30 @@ body {
   justify-content: center;
 }
 
-.sprite {
-  width: var(--size);
-  height: var(--size);
-  background: radial-gradient(circle, #00ff00, #006400); 
-  box-shadow: 0 0 5px #0f0;
-}
-
-.enemy, .enemy_2, .enemy_3, .enemy_4 {
+.wall {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle, #ff0000, #8b0000); 
+  background-color: #8b4513;
+}
+
+.sprite {
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #00ff00, #006400);
+  box-shadow: 0 0 5px #0f0;
+}
+
+.enemy,
+.enemy_2,
+.enemy_3,
+.enemy_4 {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #ff0000, #8b0000);
   animation: float 2s infinite alternate;
+  z-index: 10;
 }
 
 .cage {
@@ -66,3 +77,11 @@ body {
     filter: hue-rotate(360deg);
   }
 }
+
+.explosion {
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #ff4500, #ff8c00);
+
+}
+

@@ -4,12 +4,12 @@
 
 ## Fonctionnalité à developper
 
-- [ ] Terrain
-- [ ] Obstacles (fixe ou random)
-- [ ] Joueur
+- [x] Terrain
+- [x] Obstacles (fixe ou random)
+- [x] Joueur
   - [x] déplacement flèches directionnelles
   - [x] limité les déplacement dans la fenêtre
-- [ ] Ennemis (déplacement aléatoire)
+- [x] Ennemis (déplacement aléatoire)
   - [x] ennemis avec spawn aléatoire
 - [ ] Bombe
   - [x] affichage de la bombe
