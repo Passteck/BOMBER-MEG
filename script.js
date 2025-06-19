@@ -89,7 +89,6 @@ window.addEventListener("keydown", (e) => {
 });
 
 // Gestion de la bombe
-
 const placeBomb = () => {
   if (!boom) {
     boom = document.createElement("div");
@@ -104,27 +103,53 @@ const placeBomb = () => {
     const spawnExplode = () => {
       const megumin = document.createElement("div");
       megumin.className = "explosion";
-      const megurect = boom.getBoundingClientRect();
-      megumin.style.position = "relative";
-      megumin.style.left = `${megurect.left - cagerect.left}px`;
-      megumin.style.top = `${megurect.top - cagerect.top}px`;
+      const blastSize = size * boom.dataset.range * 3;
+
+      megumin.style.width = `${blastSize}px`;
+      megumin.style.height = `${blastSize}px`;
+      const boomX = parseInt(boom.style.left);
+      const boomY = parseInt(boom.style.top);
+      // const megurect = boom.getBoundingClientRect();
+      // megumin.style.position = "relative";
+      // megumin.style.left = `${megurect.left - cagerect.left}px`;
+      // megumin.style.top = `${megurect.top - cagerect.top}px`;
+      megumin.style.position = "absolute";
+      megumin.style.left = `${boomX - (blastSize / 2 - size / 2)}px`; // Proper centering
+      megumin.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
       cage.appendChild(megumin);
       setTimeout(() => megumin.remove(), 500);
     };
 
     // Ajout de dommage aux bombs
-    boom.dataset.damage = 2;
-    boom.dataset.range = 4;
+    // boom.dataset.damage = 2;
+    boom.dataset.range = 1;
 
-    const explode = () => {
+    const explode = (boom) => {
       // remplir la fonction pour la destrution
+      const boomX = parseInt(boom.style.left);
+      const boomY = parseInt(boom.style.top);
+      const walls = document.querySelectorAll(".wall");
+      for (let wall of walls) {
+        const wallX = parseInt(wall.style.left);
+        const wallY = parseInt(wall.style.top);
+        if (
+          Math.abs(wallX - boomX) <= size * boom.dataset.range &&
+          Math.abs(wallY - boomY) <= size * boom.dataset.range
+        ) {
+          wall.dataset.health -= 2;
+          if (wall.dataset.health <= 0) {
+            wall.remove();
+          }
+        }
+      }
     };
 
     setTimeout(() => {
-      explode(spawnExplode);
+      spawnExplode();
+      explode(boom);
       boom.remove();
       boom = null;
-    }, 3000);
+    }, 1000);
   }
 };
 
