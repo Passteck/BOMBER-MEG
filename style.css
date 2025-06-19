@@ -18,7 +18,8 @@ body {
   box-shadow: 0 0 5px #0f0;
 }
 
-.enemy {
+.enemy, .enemy_2, .enemy_3, .enemy_4 {
+  position: absolute;
   width: var(--size);
   height: var(--size);
   background: radial-gradient(circle, #ff0000, #8b0000); 

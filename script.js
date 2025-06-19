@@ -4,10 +4,13 @@ document.addEventListener("keydown", function (e) {
 
 const size = 30;
 const cagesize = 690;
-
+const grid_steps = cagesize / size;
 const cage = document.querySelector(".cage");
 const sprite = document.querySelector(".sprite");
 const enemy = document.querySelector(".enemy");
+const enemytwo = document.querySelector(".enemy_2");
+const enemythree = document.querySelector(".enemy_3");
+const enemyfour = document.querySelector(".enemy_4");
 let moveBy = size;
 let boom = null;
 
@@ -18,16 +21,39 @@ window.addEventListener("load", () => {
   sprite.style.top = "0px";
 });
 
-// Ajout de spawn aleatoire pour l'ennemie
+// Ajout de spawn aleatoire pour l'ennemis
 const getrandomvalue = (max) => {
   return Math.floor(Math.random() * max);
 };
 window.addEventListener("load", () => {
-  const grid_steps = cagesize / size;
-  enemy.style.position = "absolute";
   enemy.style.left = getrandomvalue(grid_steps) * size + "px";
   enemy.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemy deux
+  enemytwo.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemytwo.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemy trois
+  enemythree.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemythree.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemyfour
+  enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
 });
+
+// Mouvement aléatoire des ennemis
+
+setInterval(() => {
+  enemy.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemy.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemy deux
+  enemytwo.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemytwo.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemy trois
+  enemythree.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemythree.style.top = getrandomvalue(grid_steps) * size + "px";
+  // enemyfour
+  enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
+  enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
+}, 2000);
 
 // Gestion des déplacements du joueur
 window.addEventListener("keydown", (e) => {

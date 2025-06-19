@@ -4,13 +4,15 @@
 
 ## Fonctionnalité à developper
 
-- [ ] le terrain
-- [ ] les obstacles (fixe ou random)
-- [ ] le joueur
+- [ ] Terrain
+- [ ] Obstacles (fixe ou random)
+- [ ] Joueur
   - [x] déplacement flèches directionnelles
   - [x] limité les déplacement dans la fenêtre
-- [ ] les ennemis (déplacement aléatoire)
-- [ ] bombe
+- [ ] Ennemis (déplacement aléatoire)
+  - [x] ennemis avec spawn aléatoire
+- [ ] Bombe
   - [x] affichage de la bombe
   - [ ] dégât de la bombe
-- [ ] collision (obstacle, joueur, ennemis)
+- [ ] Collision
+  - [x] collision bombe, ennemis et joueur
