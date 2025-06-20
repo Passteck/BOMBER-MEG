@@ -15,4 +15,5 @@
   - [x] affichage de la bombe
   - [ ] dégât de la bombe
 - [ ] Collision
-  - [x] collision bombe, ennemis et joueur
+  - [x] collision bombe et joueur
+- [x] Contrôleur de volume
