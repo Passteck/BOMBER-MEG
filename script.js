@@ -3,7 +3,7 @@
 // });
 
 const size = 50;
-const cagesize = 900;
+const cagesize = 800;
 const grid_steps = cagesize / size;
 const cage = document.querySelector(".cage");
 const sprite = document.querySelector(".sprite");
@@ -14,18 +14,18 @@ const enemyfour = document.querySelector(".enemy_4");
 let moveBy = size;
 let boom = null;
 
-// Définir la vie du joueur
+// Player health
 let maxHealth = 3;
 let spritehealth = maxHealth;
 
-// Position de base du joueur
+// Load a default position for player
 window.addEventListener("load", () => {
   sprite.style.position = "absolute";
   sprite.style.left = "0px";
   sprite.style.top = "0px";
 });
 
-// Ajout de spawn aleatoire pour l'ennemis
+// Add a random spawn for enemy
 const getrandomvalue = (max) => {
   return Math.floor(Math.random() * max);
 };
@@ -43,7 +43,7 @@ window.addEventListener("load", () => {
   enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
 });
 
-// Mouvement aléatoire des ennemis
+// Random movement for enemy
 
 setInterval(() => {
   enemy.style.left = getrandomvalue(grid_steps) * size + "px";
@@ -59,7 +59,7 @@ setInterval(() => {
   enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
 }, 2000);
 
-// Gestion des déplacements du joueur
+// Player movement
 window.addEventListener("keydown", (e) => {
   let left = parseInt(sprite.style.left) || 0;
   let top = parseInt(sprite.style.top) || 0;
@@ -90,16 +90,14 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// Gestion de la bombe
+// Bomb function
 const placeBomb = () => {
   if (!boom) {
     boom = document.createElement("div");
     boom.className = "boom";
-    const spriterect = sprite.getBoundingClientRect();
-    const cagerect = cage.getBoundingClientRect();
     boom.style.position = "relative";
-    boom.style.left = `${spriterect.left - cagerect.left - 1}px`;
-    boom.style.top = `${spriterect.top - cagerect.top - 1}px`;
+    boom.style.left = `${sprite.offsetLeft}px`;
+    boom.style.top = `${sprite.offsetTop}px`;
     cage.appendChild(boom);
 
     const spawnExplode = () => {
@@ -107,7 +105,7 @@ const placeBomb = () => {
       megumin.className = "explosion";
       const blastSize = size * boom.dataset.range * 3;
 
-      // Display un son a l'explosion de la bombe
+      // Display a sound for the bomb explosion
       const explosionsound = document.getElementById("boom");
       explosionsound.currentTime = 0;
       explosionsound.play();
@@ -116,10 +114,6 @@ const placeBomb = () => {
       megumin.style.height = `${blastSize}px`;
       const boomX = parseInt(boom.style.left);
       const boomY = parseInt(boom.style.top);
-      // const megurect = boom.getBoundingClientRect();
-      // megumin.style.position = "relative";
-      // megumin.style.left = `${megurect.left - cagerect.left}px`;
-      // megumin.style.top = `${megurect.top - cagerect.top}px`;
       megumin.style.position = "absolute";
       megumin.style.left = `${boomX - (blastSize / 2 - size / 2)}px`;
       megumin.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
@@ -127,7 +121,7 @@ const placeBomb = () => {
       setTimeout(() => megumin.remove(), 500);
     };
 
-    // Ajout de dommage aux bombs
+    // Add damage to the bomb
     boom.dataset.range = 1;
 
     const explode = (boom) => {
@@ -148,25 +142,25 @@ const placeBomb = () => {
         }
       }
 
-      // Ajouter l'affichage des pv du joueur
+      // Display player health
       const healthDisplay = () => {
         const healthicon = document.getElementById("health-icon");
         const healthtext = document.getElementById("health-text");
 
-        // Affichage visuel avec coeur
+        // With heart
         healthicon.innerHTML =
           "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
-        // Affichage textuelle
+        // With text
         healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
 
-        // Ajout d'un effet de pulsation
-        if (spritehealth < maxHealth) {
-          healthicon.style.animation = "pulse 0.5";
-          setTimeout(() => (healthicon.style.animation = ""), 500);
-        }
+        // Add a pulse effect / doesn't work for now
+        // if (spritehealth < maxHealth) {
+        //   healthtext.style.animation = "pulse 0.5";
+        //   setTimeout(() => (healthicon.style.animation = ""), 500);
+        // };
       };
 
-      // Ajouter les dégat sur le joueur
+      // Add damage to the player
 
       const spriteDamage = () => {
         spritehealth -= 1;
@@ -199,20 +193,20 @@ const placeBomb = () => {
   }
 };
 
-// Ecouteur d'event pour la bombe
+// Event listener to drop a bomb
 
 document.addEventListener("keydown", (e) => {
   if (e.key === " ") {
     e.preventDefault();
     placeBomb();
-    // Display un son a la pose de la bombe
+    // Display a sound when a bomb is dropped
     const meguminsound = document.getElementById("explosiiion");
     meguminsound.currentTime = 0;
     meguminsound.play();
   }
 });
 
-// Génération de murs
+// Wall random generation
 window.addEventListener("load", () => {
   for (let i = 0; i < 900; i++) {
     const wall = document.createElement("div");
@@ -224,7 +218,7 @@ window.addEventListener("load", () => {
   }
 });
 
-// Gestion des collision
+// Collision
 
 const collisionElements = () => {
   return {
@@ -239,7 +233,6 @@ const checkForCollision = (x, y) => {
   const playerSize = size;
 
   for (const bomb of bombs) {
-    // const bombarect = bomb.getBoundingClientRect();
     if (
       bomb.offsetLeft < x + playerSize &&
       bomb.offsetLeft + bomb.offsetWidth > x &&
@@ -250,7 +243,7 @@ const checkForCollision = (x, y) => {
     }
   }
 
-  // BUG ajouter la collision des enemy bloque les mouvement du joueur
+  // BUG Doesn't work and lock player on his default position
   // for (const enemy of enemies) {
   //   // const enemyrect = enemy.getBoundingClientRect();
   //   if (
@@ -264,7 +257,6 @@ const checkForCollision = (x, y) => {
   // }
 
   for (const wall of walls) {
-    // const wallrect = wall.getBoundingClientRect();
     if (
       wall.offsetLeft < x + playerSize &&
       wall.offsetLeft + wall.offsetWidth > x &&
@@ -277,7 +269,7 @@ const checkForCollision = (x, y) => {
   return false;
 };
 
-// Ajout d'un contrôleur de volume
+// Add volume control
 
 const volume = document.getElementById("volume-slider");
 let gamesound = 0.1;
