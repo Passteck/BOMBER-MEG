@@ -1,6 +1,5 @@
 # MeguminBomber
 
-<!-- Language Tabs Navigation -->
 <p align="center">
   <a href="#english-version">🇬🇧 English</a> | 
   <a href="#version-française">🇫🇷 Français</a>
@@ -11,7 +10,6 @@
 ## <a id="english-version"></a>🇬🇧 English
 
 _A bomb-tastic pixel adventure!_
-
 
 ## 🎮 Current features
 
