@@ -4,19 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Distressed&display=swap"
+      rel="stylesheet"
+    />
+    <title>BOOMAN</title>
   </head>
   <body>
-    <h1>Appuyez sur une touche</h1>
-    <p id="output"></p>
+    <h1 class="title">MEGUMIN</h1>
+    <div id="health-display">
+      <span id="health-icon">❤️❤️❤️</span>
+      <span id="health-text">HP: 3 / 3</span>
+    </div>
+    <div id="volume-control">
+      <span>🔇</span>
+      <input
+        type="range"
+        id="volume-slider"
+        min="0"
+        max="1"
+        step="0.1"
+        value="0.1"
+      />
+      <span>🔊</span>
+    </div>
     <div class="cage">
-      <div class="sprite"></div>
-
+      <img class="sprite" src="img/megumin.png" alt="megumin" />
       <div class="enemy"></div>
       <div class="enemy_2"></div>
-      <div class="enemy_3""></div>
+      <div class="enemy_3"></div>
       <div class="enemy_4"></div>
     </div>
+    <audio id="explosiiion" src="audio/megumin.mp3"></audio>
+    <audio id="boom" src="audio/explosion.mp3"></audio>
     <script src="script.js"></script>
   </body>
 </html>

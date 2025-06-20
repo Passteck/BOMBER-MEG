@@ -1,40 +1,85 @@
 :root {
-  --size: 30px;
+  --size: 50px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: #222;
+  background: center/cover url("img/background.png");
   color: #fafafa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: "Rubik Distressed", system-ui;
+  font-size: xx-large;
+}
+
+.title {
+  position: absolute;
+  top: 1rem; 
+  left: 1rem;
+}
+
+.wall {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-color: #8b4513;
+  background-image: linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: var(--size) var(--size);
 }
 
 .sprite {
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle, #00ff00, #006400); 
-  box-shadow: 0 0 5px #0f0;
 }
 
-.enemy, .enemy_2, .enemy_3, .enemy_4 {
+.sprite_hit {
+  animation: blink 0.3s infinite;
+}
+
+#health-display {
+  position: absolute; 
+  top: 6rem; 
+  left: 3rem;
+  background: rgba(0,0,0,0.7);
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+#volume-control {
+  background-color: #222;
+  padding: 0 1rem;
+}
+
+
+
+.enemy,
+.enemy_2,
+.enemy_3,
+.enemy_4 {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle, #ff0000, #8b0000); 
+  background: radial-gradient(circle, #ff0000, #8b0000);
   animation: float 2s infinite alternate;
+  z-index: 10;
 }
 
 .cage {
   position: relative;
   overflow: hidden;
-  height: 691px;
-  width: 691px;
-  background-image: linear-gradient(#ccc 1px, transparent 1px),
-    linear-gradient(90deg, #ccc 1px, transparent 1px);
-  background-size: var(--size) var(--size);
+  height: 900px;
+  width: 900px;
+  background: #818080cf;
+  backdrop-filter: blur(5px);
   border: 1px solid black;
+  border-radius: 0.5rem;
 }
 
 .boom {
@@ -46,12 +91,18 @@ body {
   animation: pulse 0.5s infinite, colorshift 0.2s infinite;
 }
 
+.explosion {
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle, #ff4500, #ff8c00);
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.2);
   }
   100% {
     transform: scale(1);
@@ -64,5 +115,17 @@ body {
   }
   100% {
     filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-20px); }
+  75% { transform: translateX(20px); }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.3;
   }
 }

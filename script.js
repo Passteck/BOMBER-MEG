@@ -1,9 +1,9 @@
-document.addEventListener("keydown", function (e) {
-  document.getElementById("output").innerHTML = "Vous avez pressé : " + e.key;
-});
+// document.addEventListener("keydown", function (e) {
+//   document.getElementById("output").innerHTML = "Vous avez pressé : " + e.key;
+// });
 
-const size = 30;
-const cagesize = 690;
+const size = 50;
+const cagesize = 900;
 const grid_steps = cagesize / size;
 const cage = document.querySelector(".cage");
 const sprite = document.querySelector(".sprite");
@@ -13,6 +13,10 @@ const enemythree = document.querySelector(".enemy_3");
 const enemyfour = document.querySelector(".enemy_4");
 let moveBy = size;
 let boom = null;
+
+// Définir la vie du joueur
+let maxHealth = 3;
+let spritehealth = maxHealth;
 
 // Position de base du joueur
 window.addEventListener("load", () => {
@@ -68,7 +72,7 @@ window.addEventListener("keydown", (e) => {
       break;
 
     case "ArrowRight":
-      newleft = Math.min(660, left + moveBy);
+      newleft = Math.min(cagesize - size, left + moveBy);
       break;
 
     case "ArrowUp":
@@ -76,7 +80,7 @@ window.addEventListener("keydown", (e) => {
       break;
 
     case "ArrowDown":
-      newtop = Math.min(660, top + moveBy);
+      newtop = Math.min(cagesize - size, top + moveBy);
       break;
   }
 
@@ -96,13 +100,102 @@ const placeBomb = () => {
     boom.style.position = "relative";
     boom.style.left = `${spriterect.left - cagerect.left - 1}px`;
     boom.style.top = `${spriterect.top - cagerect.top - 1}px`;
-
     cage.appendChild(boom);
 
+    const spawnExplode = () => {
+      const megumin = document.createElement("div");
+      megumin.className = "explosion";
+      const blastSize = size * boom.dataset.range * 3;
+
+      // Display un son a l'explosion de la bombe
+      const explosionsound = document.getElementById("boom");
+      explosionsound.currentTime = 0;
+      explosionsound.play();
+
+      megumin.style.width = `${blastSize}px`;
+      megumin.style.height = `${blastSize}px`;
+      const boomX = parseInt(boom.style.left);
+      const boomY = parseInt(boom.style.top);
+      // const megurect = boom.getBoundingClientRect();
+      // megumin.style.position = "relative";
+      // megumin.style.left = `${megurect.left - cagerect.left}px`;
+      // megumin.style.top = `${megurect.top - cagerect.top}px`;
+      megumin.style.position = "absolute";
+      megumin.style.left = `${boomX - (blastSize / 2 - size / 2)}px`;
+      megumin.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
+      cage.appendChild(megumin);
+      setTimeout(() => megumin.remove(), 500);
+    };
+
+    // Ajout de dommage aux bombs
+    boom.dataset.range = 1;
+
+    const explode = (boom) => {
+      const boomX = parseInt(boom.style.left);
+      const boomY = parseInt(boom.style.top);
+      const walls = document.querySelectorAll(".wall");
+      for (let wall of walls) {
+        const wallX = parseInt(wall.style.left);
+        const wallY = parseInt(wall.style.top);
+        if (
+          Math.abs(wallX - boomX) <= size * boom.dataset.range &&
+          Math.abs(wallY - boomY) <= size * boom.dataset.range
+        ) {
+          wall.dataset.health -= 1;
+          if (wall.dataset.health <= 0) {
+            wall.remove();
+          }
+        }
+      }
+
+      // Ajouter l'affichage des pv du joueur
+      const healthDisplay = () => {
+        const healthicon = document.getElementById("health-icon");
+        const healthtext = document.getElementById("health-text");
+
+        // Affichage visuel avec coeur
+        healthicon.innerHTML =
+          "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
+        // Affichage textuelle
+        healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
+
+        // Ajout d'un effet de pulsation
+        if (spritehealth < maxHealth) {
+          healthicon.style.animation = "pulse 0.5";
+          setTimeout(() => (healthicon.style.animation = ""), 500);
+        }
+      };
+
+      // Ajouter les dégat sur le joueur
+
+      const spriteDamage = () => {
+        spritehealth -= 1;
+        healthDisplay();
+        sprite.classList.add("sprite_hit");
+        setTimeout(() => sprite.classList.remove("sprite_hit"), 2000);
+        if (spritehealth <= 0) {
+          sprite.remove();
+          console.log("GAME OVER");
+        }
+      };
+      const spriteX = parseInt(sprite.style.left);
+      const spriteY = parseInt(sprite.style.top);
+      if (
+        Math.abs(spriteX - boomX) <= size * boom.dataset.range &&
+        Math.abs(spriteY - boomY) <= size * boom.dataset.range
+      ) {
+        spriteDamage();
+      }
+    };
+
     setTimeout(() => {
+      spawnExplode();
+      explode(boom);
+      cage.style.animation = "shake 0.1s linear infinite";
+      setTimeout(() => (cage.style.animation = ""), 500);
       boom.remove();
       boom = null;
-    }, 3000);
+    }, 2400);
   }
 };
 
@@ -112,7 +205,22 @@ document.addEventListener("keydown", (e) => {
   if (e.key === " ") {
     e.preventDefault();
     placeBomb();
-    console.log((document.getElementById("output").innerHTML = "Boom"));
+    // Display un son a la pose de la bombe
+    const meguminsound = document.getElementById("explosiiion");
+    meguminsound.currentTime = 0;
+    meguminsound.play();
+  }
+});
+
+// Génération de murs
+window.addEventListener("load", () => {
+  for (let i = 0; i < 900; i++) {
+    const wall = document.createElement("div");
+    wall.className = "wall";
+    wall.dataset.health = 1;
+    wall.style.left = `${Math.floor(Math.random() * 25) * size}px`;
+    wall.style.top = `${Math.floor(1 + Math.random() * 25) * size}px`;
+    cage.appendChild(wall);
   }
 });
 
@@ -122,15 +230,16 @@ const collisionElements = () => {
   return {
     bombs: document.querySelectorAll(".boom"),
     enemies: document.querySelectorAll(".enemy"),
+    walls: document.querySelectorAll(".wall"),
   };
 };
 
 const checkForCollision = (x, y) => {
-  const { bombs, enemies } = collisionElements();
+  const { bombs, walls } = collisionElements();
   const playerSize = size;
 
   for (const bomb of bombs) {
-    const bombarect = bomb.getBoundingClientRect();
+    // const bombarect = bomb.getBoundingClientRect();
     if (
       bomb.offsetLeft < x + playerSize &&
       bomb.offsetLeft + bomb.offsetWidth > x &&
@@ -141,16 +250,48 @@ const checkForCollision = (x, y) => {
     }
   }
 
-  for (const enemy of enemies) {
-    const enemyrect = enemy.getBoundingClientRect();
+  // BUG ajouter la collision des enemy bloque les mouvement du joueur
+  // for (const enemy of enemies) {
+  //   // const enemyrect = enemy.getBoundingClientRect();
+  //   if (
+  //     enemy.offsetLeft < x + playerSize &&
+  //     enemy.offsetLeft + enemy.offsetWidth > x &&
+  //     enemy.offsetTop < y + playerSize &&
+  //     enemy.offsetTop + enemy.offsetHeight > y
+  //   ) {
+  //     return true;
+  //   }
+  // }
+
+  for (const wall of walls) {
+    // const wallrect = wall.getBoundingClientRect();
     if (
-      enemy.offsetLeft < x + playerSize &&
-      enemy.offsetLeft + enemy.offsetWidth > x &&
-      enemy.offsetTop < y + playerSize &&
-      enemy.offsetTop + enemy.offsetHeight > y
+      wall.offsetLeft < x + playerSize &&
+      wall.offsetLeft + wall.offsetWidth > x &&
+      wall.offsetTop < y + playerSize &&
+      wall.offsetTop + wall.offsetHeight > y
     ) {
       return true;
     }
   }
   return false;
 };
+
+// Ajout d'un contrôleur de volume
+
+const volume = document.getElementById("volume-slider");
+let gamesound = 0.1;
+
+const updateSoundVolume = () => {
+  const son = document.querySelectorAll("audio");
+  for (const sons of son) {
+    sons.volume = gamesound;
+  }
+};
+
+volume.addEventListener("input", (e) => {
+  gamesound = parseFloat(e.target.value);
+  updateSoundVolume();
+});
+
+updateSoundVolume();
