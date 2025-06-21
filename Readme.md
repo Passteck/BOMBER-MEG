@@ -15,7 +15,7 @@ _A bomb-tastic pixel adventure!_
 
 ### 🌍 Environment
 
-- [x] Background 
+- [x] Background
 - [x] Destructible walls (randomly generated)
 
 ### 🧙 Player
@@ -27,14 +27,14 @@ _A bomb-tastic pixel adventure!_
 ### 👾 Enemies
 
 - [x] Random spawn positions
-- [ ] **Planned:** Enemy health system
+- [x] Enemy health system
 
 ### 💣 Gameplay
 
 - [x] Bomb placement (Spacebar)
 - [x] Player damage from explosions
 - [x] Wall destruction
-- [ ] **Coming Soon:** Bonus for killing an enemy
+- [x] Drop a key for killing an enemy
 
 ### ⚙️ Systems
 
@@ -69,14 +69,14 @@ _Une aventure explosive en pixels !_
 ### 👾 Ennemis
 
 - [x] Apparition aléatoire
-- [ ] **À venir :** Système de santé des ennemis
+- [x] Système de santé des ennemis
 
 ### 💣 Gameplay
 
 - [x] Placement de bombes (Barre espace)
 - [x] Dégâts au joueur
 - [x] Destruction des murs
-- [ ] **Bientôt :** Bonus de tuer des ennemis
+- [x] Drop de clé en tuant un ennemi
 
 ### ⚙️ Systèmes
 

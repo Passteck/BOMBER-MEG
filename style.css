@@ -22,7 +22,7 @@ body {
 
 .title {
   position: absolute;
-  top: 1rem; 
+  top: 1rem;
   left: 1rem;
 }
 
@@ -36,6 +36,26 @@ body {
   background-size: var(--size) var(--size);
 }
 
+.open {
+  background-color: #fafa;
+  width: var(--size);
+  height: var(--size);
+  z-index: 1;
+}
+
+.locked {
+  background-color: #222;
+  width: var(--size);
+  height: var(--size);
+  z-index: 1;
+}
+
+.key {
+  background-color: #ffff00;
+  width: var(--size);
+  height: var(--size);
+}
+
 .sprite {
   width: var(--size);
   height: var(--size);
@@ -46,12 +66,33 @@ body {
 }
 
 #health-display {
-  position: absolute; 
-  top: 6rem; 
+  position: absolute;
+  top: 6rem;
   left: 3rem;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   padding: 5px 10px;
   border-radius: 10px;
+}
+
+.keycounter {
+  position: absolute;
+  top: 10rem;
+  left: 7rem;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+#messagetext {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top:  15rem;
+  left: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 10px;
+  white-space: pre-line;
 }
 
 #volume-control {
@@ -59,8 +100,6 @@ body {
   padding: 0 1rem;
   margin-bottom: 1rem;
 }
-
-
 
 .enemy,
 .enemy_2,
@@ -122,9 +161,16 @@ body {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-100px); }
-  75% { transform: translateX(100px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-100px);
+  }
+  75% {
+    transform: translateX(100px);
+  }
 }
 
 @keyframes blink {
