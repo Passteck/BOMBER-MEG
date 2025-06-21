@@ -17,6 +17,11 @@ let boom = null;
 // Player health
 let maxHealth = 3;
 let spritehealth = maxHealth;
+// Enemies health
+let enemyhealth = 1;
+let enemyhealth2 = 1;
+let enemyhealth3 = 1;
+let enemyhealth4 = 1;
 
 // Load a default position for player
 window.addEventListener("load", () => {
@@ -57,15 +62,14 @@ setInterval(() => {
   // enemyfour
   enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
   enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
-}, 2000);
+}, 5000);
 
 // Player movement
 window.addEventListener("keydown", (e) => {
   let left = parseInt(sprite.style.left) || 0;
   let top = parseInt(sprite.style.top) || 0;
-  let newleft = left,
-    newtop = top;
-
+  let newleft = left;
+  newtop = top;
   switch (e.key) {
     case "ArrowLeft":
       newleft = Math.max(0, left - moveBy);
@@ -121,7 +125,7 @@ const placeBomb = () => {
       setTimeout(() => megumin.remove(), 500);
     };
 
-    // Add damage to the bomb
+    // Add damage for walls
     boom.dataset.range = 1;
 
     const explode = (boom) => {
@@ -180,6 +184,66 @@ const placeBomb = () => {
       ) {
         spriteDamage();
       }
+
+      // Add damage to enemies
+      const enemyDamage = () => {
+        enemyhealth -= 1;
+        if (enemyhealth <= 0) {
+          enemy.remove();
+          console.log("ENEMY ONE KILLED");
+        }
+      };
+      const enemyTwoDamage = () => {
+        enemyhealth2 -= 1;
+        if (enemyhealth2 <= 0) {
+          enemytwo.remove();
+          console.log("ENEMY TWO KILLED");
+        }
+      };
+      const enemyThreeDamage = () => {
+        enemyhealth3 -= 1;
+        if (enemyhealth3 <= 0) {
+          enemythree.remove();
+          console.log("ENEMY THREE KILLED");
+        }
+      };
+      const enemyFourDamage = () => {
+        enemyhealth4 -= 1;
+        if (enemyhealth4 <= 0) {
+          enemyfour.remove();
+          console.log("ENEMY FOUR KILLED");
+        }
+      };
+
+      const enemyX = parseInt(enemy.style.left);
+      const enemyY = parseInt(enemy.style.top);
+      const enemyX2 = parseInt(enemytwo.style.left);
+      const enemyY2 = parseInt(enemytwo.style.top);
+      const enemyX3 = parseInt(enemythree.style.left);
+      const enemyY3 = parseInt(enemythree.style.top);
+      const enemyX4 = parseInt(enemyfour.style.left);
+      const enemyY4 = parseInt(enemyfour.style.top);
+      if (
+        Math.abs(enemyX - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY - boomY) <= size * boom.dataset.range
+      ) {
+        enemyDamage();
+      } else if (
+        Math.abs(enemyX2 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY2 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyTwoDamage();
+      } else if (
+        Math.abs(enemyX3 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY3 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyThreeDamage();
+      } else if (
+        Math.abs(enemyX4 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY4 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyFourDamage();
+      }
     };
 
     setTimeout(() => {
@@ -223,13 +287,13 @@ window.addEventListener("load", () => {
 const collisionElements = () => {
   return {
     bombs: document.querySelectorAll(".boom"),
-    enemies: document.querySelectorAll(".enemy"),
+    enemies: document.querySelectorAll(".enemy, .enemy_2, .enemy_3, .enemy_4"),
     walls: document.querySelectorAll(".wall"),
   };
 };
 
 const checkForCollision = (x, y) => {
-  const { bombs, walls } = collisionElements();
+  const { bombs, enemies, walls } = collisionElements();
   const playerSize = size;
 
   for (const bomb of bombs) {
@@ -244,17 +308,17 @@ const checkForCollision = (x, y) => {
   }
 
   // BUG Doesn't work and lock player on his default position
-  // for (const enemy of enemies) {
-  //   // const enemyrect = enemy.getBoundingClientRect();
-  //   if (
-  //     enemy.offsetLeft < x + playerSize &&
-  //     enemy.offsetLeft + enemy.offsetWidth > x &&
-  //     enemy.offsetTop < y + playerSize &&
-  //     enemy.offsetTop + enemy.offsetHeight > y
-  //   ) {
-  //     return true;
-  //   }
-  // }
+  // FIXED
+  for (let enemy of enemies) {
+    if (
+      enemy.offsetLeft < x + playerSize &&
+      enemy.offsetLeft + enemy.offsetWidth > x &&
+      enemy.offsetTop < y + playerSize &&
+      enemy.offsetTop + enemy.offsetHeight > y
+    ) {
+      return true;
+    }
+  }
 
   for (const wall of walls) {
     if (
@@ -285,5 +349,3 @@ volume.addEventListener("input", (e) => {
   gamesound = parseFloat(e.target.value);
   updateSoundVolume();
 });
-
-updateSoundVolume();

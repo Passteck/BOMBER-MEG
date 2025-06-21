@@ -15,7 +15,7 @@ _A bomb-tastic pixel adventure!_
 
 ### 🌍 Environment
 
-- [x] Scrolling background
+- [x] Background 
 - [x] Destructible walls (randomly generated)
 
 ### 🧙 Player
@@ -34,7 +34,7 @@ _A bomb-tastic pixel adventure!_
 - [x] Bomb placement (Spacebar)
 - [x] Player damage from explosions
 - [x] Wall destruction
-- [ ] **Coming Soon:** Enemy damage
+- [ ] **Coming Soon:** Bonus for killing an enemy
 
 ### ⚙️ Systems
 
@@ -45,8 +45,6 @@ _A bomb-tastic pixel adventure!_
 ## 🚀 Planned features
 
 ```md
-- Enemy health & attack patterns
-- Multi-bomb combos
 - Power-ups (Range boost, Speed boost)
 - Animated explosion VFX
 ```
@@ -59,7 +57,7 @@ _Une aventure explosive en pixels !_
 
 ### 🌍 Environnement
 
-- [x] Fond d'écran défilant
+- [x] Fond d'écran
 - [x] Murs destructibles (génération aléatoire)
 
 ### 🧙 Joueur
@@ -78,7 +76,7 @@ _Une aventure explosive en pixels !_
 - [x] Placement de bombes (Barre espace)
 - [x] Dégâts au joueur
 - [x] Destruction des murs
-- [ ] **Bientôt :** Dégâts aux ennemis
+- [ ] **Bientôt :** Bonus de tuer des ennemis
 
 ### ⚙️ Systèmes
 
@@ -89,8 +87,6 @@ _Une aventure explosive en pixels !_
 ## 🚀 Fonctionnalités prévu
 
 ```md
-- Santé et comportements des ennemis
-- Combos de bombes multiples
 - Bonus (Portée, Vitesse)
 - Effets visuels d'explosion animés
 ```
