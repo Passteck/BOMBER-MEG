@@ -13,10 +13,16 @@ const enemythree = document.querySelector(".enemy_3");
 const enemyfour = document.querySelector(".enemy_4");
 let moveBy = size;
 let boom = null;
+const playerSize = size;
 
 // Player health
 let maxHealth = 3;
 let spritehealth = maxHealth;
+// Enemies health
+let enemyhealth = 1;
+let enemyhealth2 = 1;
+let enemyhealth3 = 1;
+let enemyhealth4 = 1;
 
 // Load a default position for player
 window.addEventListener("load", () => {
@@ -57,15 +63,14 @@ setInterval(() => {
   // enemyfour
   enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
   enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
-}, 2000);
+}, 5000);
 
 // Player movement
 window.addEventListener("keydown", (e) => {
   let left = parseInt(sprite.style.left) || 0;
   let top = parseInt(sprite.style.top) || 0;
-  let newleft = left,
-    newtop = top;
-
+  let newleft = left;
+  newtop = top;
   switch (e.key) {
     case "ArrowLeft":
       newleft = Math.max(0, left - moveBy);
@@ -89,6 +94,25 @@ window.addEventListener("keydown", (e) => {
     sprite.style.top = `${newtop}px`;
   }
 });
+
+// Display player health
+const healthDisplay = () => {
+  const healthicon = document.getElementById("health-icon");
+  const healthtext = document.getElementById("health-text");
+
+  // With heart
+  healthicon.innerHTML =
+    "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
+  // With text
+  healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
+
+  // Add a pulse effect
+  // BUG Pulse effect doesn't work for now
+  // if (spritehealth < maxHealth) {
+  //   healthicon.style.animation = "pulse 0.5s ease-in-out infinite alternate";
+  //   setTimeout(() => (healthicon.style.animation = ""), 1000);
+  // }
+};
 
 // Bomb function
 const placeBomb = () => {
@@ -121,7 +145,7 @@ const placeBomb = () => {
       setTimeout(() => megumin.remove(), 500);
     };
 
-    // Add damage to the bomb
+    // Add damage for walls
     boom.dataset.range = 1;
 
     const explode = (boom) => {
@@ -141,24 +165,6 @@ const placeBomb = () => {
           }
         }
       }
-
-      // Display player health
-      const healthDisplay = () => {
-        const healthicon = document.getElementById("health-icon");
-        const healthtext = document.getElementById("health-text");
-
-        // With heart
-        healthicon.innerHTML =
-          "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
-        // With text
-        healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
-
-        // Add a pulse effect / doesn't work for now
-        // if (spritehealth < maxHealth) {
-        //   healthtext.style.animation = "pulse 0.5";
-        //   setTimeout(() => (healthicon.style.animation = ""), 500);
-        // };
-      };
 
       // Add damage to the player
 
@@ -180,6 +186,67 @@ const placeBomb = () => {
       ) {
         spriteDamage();
       }
+
+      // Add damage to enemies
+      const enemyDamage = () => {
+        enemyhealth -= 1;
+        if (enemyhealth <= 0) {
+          dropKey(enemyX, enemyY);
+          enemy.remove();
+          console.log("ENEMY ONE KILLED");
+        }
+      };
+      const enemyTwoDamage = () => {
+        enemyhealth2 -= 1;
+        if (enemyhealth2 <= 0) {
+          enemytwo.remove();
+          console.log("ENEMY TWO KILLED");
+        }
+      };
+      const enemyThreeDamage = () => {
+        enemyhealth3 -= 1;
+        if (enemyhealth3 <= 0) {
+          enemythree.remove();
+          console.log("ENEMY THREE KILLED");
+        }
+      };
+      const enemyFourDamage = () => {
+        enemyhealth4 -= 1;
+        if (enemyhealth4 <= 0) {
+          enemyfour.remove();
+          console.log("ENEMY FOUR KILLED");
+        }
+      };
+
+      const enemyX = parseInt(enemy.style.left);
+      const enemyY = parseInt(enemy.style.top);
+      const enemyX2 = parseInt(enemytwo.style.left);
+      const enemyY2 = parseInt(enemytwo.style.top);
+      const enemyX3 = parseInt(enemythree.style.left);
+      const enemyY3 = parseInt(enemythree.style.top);
+      const enemyX4 = parseInt(enemyfour.style.left);
+      const enemyY4 = parseInt(enemyfour.style.top);
+      if (
+        Math.abs(enemyX - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY - boomY) <= size * boom.dataset.range
+      ) {
+        enemyDamage();
+      } else if (
+        Math.abs(enemyX2 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY2 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyTwoDamage();
+      } else if (
+        Math.abs(enemyX3 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY3 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyThreeDamage();
+      } else if (
+        Math.abs(enemyX4 - boomX) <= size * boom.dataset.range &&
+        Math.abs(enemyY4 - boomY) <= size * boom.dataset.range
+      ) {
+        enemyFourDamage();
+      }
     };
 
     setTimeout(() => {
@@ -189,7 +256,7 @@ const placeBomb = () => {
       setTimeout(() => (cage.style.animation = ""), 500);
       boom.remove();
       boom = null;
-    }, 2400);
+    }, 2500);
   }
 };
 
@@ -218,19 +285,68 @@ window.addEventListener("load", () => {
   }
 });
 
+// Add an exit door
+
+const door = document.createElement("div");
+door.id = "exit-door";
+door.className = "door locked";
+door.style.position = "absolute";
+door.style.left = "750px";
+door.style.top = "750px";
+cage.appendChild(door);
+
+//  #BUG Key is not working/Player can't take keys
+// FIXED (forgot to put  requestAnimationFrame(gameloop); in the gameloop function)
+
+// Key variable
+let keycount = 0;
+
+// Drop key
+const dropKey = (x, y) => {
+  const key = document.createElement("div");
+  key.className = "key";
+  key.style.position = "absolute";
+  key.style.left = `${x}px`;
+  key.style.top = `${y}px`;
+  cage.appendChild(key);
+};
+
+// Key collection
+
+const keysElements = () => {
+  const keys = document.querySelectorAll(".key");
+  for (let key of keys) {
+    if (
+      key.offsetLeft < sprite.offsetLeft + playerSize &&
+      key.offsetLeft + key.offsetWidth > sprite.offsetLeft &&
+      key.offsetTop < sprite.offsetTop + playerSize &&
+      key.offsetTop + key.offsetHeight > sprite.offsetTop
+    ) {
+      keycount++;
+      key.remove();
+      keydisplay();
+      console.log("Key collected");
+    }
+    return;
+  }
+};
+
+const keydisplay = () => {
+  const keytext = document.querySelector(".keycounter");
+  keytext.textContent = `Key: ${keycount}`;
+};
 // Collision
 
 const collisionElements = () => {
   return {
     bombs: document.querySelectorAll(".boom"),
-    enemies: document.querySelectorAll(".enemy"),
+    enemies: document.querySelectorAll(".enemy, .enemy_2, .enemy_3, .enemy_4"),
     walls: document.querySelectorAll(".wall"),
   };
 };
 
 const checkForCollision = (x, y) => {
-  const { bombs, walls } = collisionElements();
-  const playerSize = size;
+  const { bombs, enemies, walls, keys } = collisionElements();
 
   for (const bomb of bombs) {
     if (
@@ -244,17 +360,17 @@ const checkForCollision = (x, y) => {
   }
 
   // BUG Doesn't work and lock player on his default position
-  // for (const enemy of enemies) {
-  //   // const enemyrect = enemy.getBoundingClientRect();
-  //   if (
-  //     enemy.offsetLeft < x + playerSize &&
-  //     enemy.offsetLeft + enemy.offsetWidth > x &&
-  //     enemy.offsetTop < y + playerSize &&
-  //     enemy.offsetTop + enemy.offsetHeight > y
-  //   ) {
-  //     return true;
-  //   }
-  // }
+  // FIXED
+  for (let enemy of enemies) {
+    if (
+      enemy.offsetLeft < x + playerSize &&
+      enemy.offsetLeft + enemy.offsetWidth > x &&
+      enemy.offsetTop < y + playerSize &&
+      enemy.offsetTop + enemy.offsetHeight > y
+    ) {
+      return true;
+    }
+  }
 
   for (const wall of walls) {
     if (
@@ -286,4 +402,27 @@ volume.addEventListener("input", (e) => {
   updateSoundVolume();
 });
 
-updateSoundVolume();
+// Win condition function
+const wincondition = () => {
+  const displaytext = document.querySelector("#messagetext");
+  if (
+    door.offsetLeft < sprite.offsetLeft + playerSize &&
+    door.offsetLeft + door.offsetWidth > sprite.offsetLeft &&
+    door.offsetTop < sprite.offsetTop + playerSize &&
+    door.offsetTop + door.offsetHeight > sprite.offsetTop
+  ) {
+    if (keycount >= 1) {
+      door.classList.remove("locked");
+      door.classList.add("open");
+      displaytext.textContent = `Door is unlocked!`;
+    } else {
+      displaytext.textContent = `Door is locked... \nI should find a key to open it.`;
+    }
+  }
+};
+const gameloop = () => {
+  keysElements();
+  wincondition();
+  requestAnimationFrame(gameloop);
+};
+gameloop();
