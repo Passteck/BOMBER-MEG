@@ -17,37 +17,48 @@ _A bomb-tastic pixel adventure!_
 
 - [x] Background
 - [x] Destructible walls (randomly generated)
+- [x] Door system with key requirement
+- [ ] **New:** Multi-stage level design
 
 ### 🧙 Player
 
 - [x] Arrow key movement
 - [x] Screen boundary limits
 - [x] Health system (3 HP) with visual hearts
+- [x] Bomb cooldown indicator
+- [ ] **Planned:** Character skins
 
 ### 👾 Enemies
 
 - [x] Random spawn positions
 - [x] Enemy health system
+- [x] Drop keys when defeated
 
 ### 💣 Gameplay
 
 - [x] Bomb placement (Spacebar)
-- [x] Player damage from explosions
+- [x] Explosion damage system
 - [x] Wall destruction
-- [x] Drop a key for killing an enemy
+- [ ] Treasure chests with random bonuses
 
 ### ⚙️ Systems
 
 - [x] Collision detection
-- [x] Volume control slider
-- [ ] **Roadmap:** Win/lose conditions
+- [x] Pause/settings menus
+- [x] Volume controls (music/SFX/voice)
+- [x] Win/lose conditions
 
 ## 🚀 Planned features
 
 ```md
-- Power-ups (Range boost, Speed boost)
-- Animated explosion VFX
+- [ ] Power ups
+- [ ] Character skins
+- [ ] 3 Stages
+- [ ] Animated VFX (explosions, damage flashes)
+- [ ] High score
 ```
+
+---
 
 ## <a id="version-française"></a>🇫🇷 Français
 
@@ -59,36 +70,43 @@ _Une aventure explosive en pixels !_
 
 - [x] Fond d'écran
 - [x] Murs destructibles (génération aléatoire)
+- [x] Porte avec système de clé
+- [ ] **Nouveau:** Niveaux multiples
 
 ### 🧙 Joueur
 
 - [x] Déplacement avec les flèches
 - [x] Limites de l'écran
 - [x] Système de santé (3 PV) avec cœurs visuels
+- [x] Indicateur de recharge des bombes
+- [ ] **À venir:** Skins de personnage
 
 ### 👾 Ennemis
 
 - [x] Apparition aléatoire
-- [x] Système de santé des ennemis
+- [x] Système de santé
+- [x] Lâchent des clés quand vaincus
 
 ### 💣 Gameplay
 
 - [x] Placement de bombes (Barre espace)
-- [x] Dégâts au joueur
+- [x] Système de dégâts par explosion
 - [x] Destruction des murs
-- [x] Drop de clé en tuant un ennemi
+- [ ] Coffres avec bonus aléatoires
 
 ### ⚙️ Systèmes
 
 - [x] Détection de collisions
-- [x] Contrôle du volume 🔊
-- [ ] **En développement :** Conditions de victoire/défaite
+- [x] Menu pause/options
+- [x] Contrôle du volume (music/SFX/voix)
+- [x] Conditions de victoire/défaite
 
-## 🚀 Fonctionnalités prévu
+## 🚀 Fonctionnalités prévues
 
 ```md
-- Bonus (Portée, Vitesse)
-- Effets visuels d'explosion animés
+- [ ] Bonus
+- [ ] Skins
+- [ ] 3 Niveaux
+- [ ] Effets visuels d'explosion animés
+- [ ] Système de high score
 ```
-
-</details>

@@ -1,7 +1,3 @@
-// document.addEventListener("keydown", function (e) {
-//   document.getElementById("output").innerHTML = "Vous avez pressé : " + e.key;
-// });
-
 const size = 50;
 const cagesize = 800;
 const grid_steps = cagesize / size;
@@ -12,7 +8,7 @@ const enemytwo = document.querySelector(".enemy_2");
 const enemythree = document.querySelector(".enemy_3");
 const enemyfour = document.querySelector(".enemy_4");
 let moveBy = size;
-let boom = null;
+let boom;
 const playerSize = size;
 
 // Player health
@@ -23,6 +19,96 @@ let enemyhealth = 1;
 let enemyhealth2 = 1;
 let enemyhealth3 = 1;
 let enemyhealth4 = 1;
+
+// Start screen
+let gamepaused = false;
+const menuscreen = document.querySelector("#menuscreen");
+// Game screen
+const gamescreen = document.querySelector("#gamescreen");
+
+// Start game
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && gamepaused === false) {
+    gamepaused = true;
+    gamescreen.classList.remove("hidden");
+    menuscreen.classList.add("hidden");
+    pausescreen.classList.add("hidden");
+    startGameMusic();
+  }
+});
+
+// Paused game
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && gamepaused === true) {
+    gamepaused = false;
+    pausescreen.classList.remove("hidden");
+  }
+});
+
+resume.addEventListener("click", () => {
+  if (gamepaused === false) {
+    gamepaused = true;
+    pausescreen.classList.add("hidden");
+  }
+});
+
+menubtn.addEventListener("click", () => {
+  if (gamepaused === false) {
+    location.reload();
+  }
+});
+
+settings.addEventListener("click", () => {
+  if (gamepaused === false) {
+    settingsscreen.classList.remove("hidden");
+    pausescreen.classList.add("hidden");
+  }
+});
+
+backbtn.addEventListener("click", () => {
+  if (gamepaused === false) {
+    settingsscreen.classList.add("hidden");
+    pausescreen.classList.remove("hidden");
+  }
+});
+
+// Game music function
+const menuMusic = document.getElementById("music_menu");
+const gameMusicstage1 = document.getElementById("music_stage1");
+
+const startGameMusic = () => {
+  menuMusic.pause();
+  gameMusicstage1.play();
+  audioUnlocker.style.display = "none";
+};
+
+// Create the unlock button when audio permission is denied for the menu music
+const audioUnlocker = document.createElement("button");
+audioUnlocker.innerHTML = "🔇";
+audioUnlocker.style.cssText = `
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 9999;
+  background: none;
+  scale: 4;
+  border: none;
+`;
+document.body.appendChild(audioUnlocker);
+
+menuMusic
+  .play()
+  .then(() => {})
+  .catch((e) => {
+    audioUnlocker.style.transform = "translateY(0)";
+    console.log("Autoplay blocked! Showing unlock button");
+  });
+
+audioUnlocker.addEventListener("click", () => {
+  menuMusic.play().then(() => {
+    audioUnlocker.innerHTML = "";
+  });
+});
 
 // Load a default position for player
 window.addEventListener("load", () => {
@@ -52,6 +138,7 @@ window.addEventListener("load", () => {
 // Random movement for enemy
 
 setInterval(() => {
+  if (!gamepaused) return;
   enemy.style.left = getrandomvalue(grid_steps) * size + "px";
   enemy.style.top = getrandomvalue(grid_steps) * size + "px";
   // enemy deux
@@ -67,24 +154,29 @@ setInterval(() => {
 
 // Player movement
 window.addEventListener("keydown", (e) => {
+  if (!gamepaused) return;
   let left = parseInt(sprite.style.left) || 0;
   let top = parseInt(sprite.style.top) || 0;
   let newleft = left;
   newtop = top;
   switch (e.key) {
     case "ArrowLeft":
+    case "q":
       newleft = Math.max(0, left - moveBy);
       break;
 
     case "ArrowRight":
+    case "d":
       newleft = Math.min(cagesize - size, left + moveBy);
       break;
 
     case "ArrowUp":
+    case "z":
       newtop = Math.max(0, top - moveBy);
       break;
 
     case "ArrowDown":
+    case "s":
       newtop = Math.min(cagesize - size, top + moveBy);
       break;
   }
@@ -98,16 +190,15 @@ window.addEventListener("keydown", (e) => {
 // Display player health
 const healthDisplay = () => {
   const healthicon = document.getElementById("health-icon");
-  const healthtext = document.getElementById("health-text");
-
   // With heart
   healthicon.innerHTML =
-    "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
-  // With text
-  healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
+    '<span class="heart">&hearts;</span>'.repeat(spritehealth) +
+    '<span class="empty-heart">&hearts;</span>'.repeat(
+      maxHealth - spritehealth
+    );
 
   // Add a pulse effect
-  // BUG Pulse effect doesn't work for now
+  // #BUG Pulse effect doesn't work for now
   // if (spritehealth < maxHealth) {
   //   healthicon.style.animation = "pulse 0.5s ease-in-out infinite alternate";
   //   setTimeout(() => (healthicon.style.animation = ""), 1000);
@@ -115,8 +206,14 @@ const healthDisplay = () => {
 };
 
 // Bomb function
+let canplacebomb = true;
+const bombcooldown = 6000;
+const bomb_damage = 1;
 const placeBomb = () => {
-  if (!boom) {
+  if (!gamepaused) return;
+  if (canplacebomb && !boom) {
+    canplacebomb = false;
+
     boom = document.createElement("div");
     boom.className = "boom";
     boom.style.position = "relative";
@@ -124,25 +221,29 @@ const placeBomb = () => {
     boom.style.top = `${sprite.offsetTop}px`;
     cage.appendChild(boom);
 
+    // Bomb cooldown
+    setTimeout(() => (canplacebomb = true), bombcooldown);
+
+    // Bomb explosion
     const spawnExplode = () => {
-      const megumin = document.createElement("div");
-      megumin.className = "explosion";
+      const meg = document.createElement("div");
+      meg.className = "explosion";
       const blastSize = size * boom.dataset.range * 3;
+
+      meg.style.width = `${blastSize}px`;
+      meg.style.height = `${blastSize}px`;
+      const boomX = parseInt(boom.style.left);
+      const boomY = parseInt(boom.style.top);
+      meg.style.position = "absolute";
+      meg.style.left = `${boomX - (blastSize / 2 - size / 2)}px`;
+      meg.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
+      cage.appendChild(meg);
+      setTimeout(() => meg.remove(), 1000);
 
       // Display a sound for the bomb explosion
       const explosionsound = document.getElementById("boom");
       explosionsound.currentTime = 0;
       explosionsound.play();
-
-      megumin.style.width = `${blastSize}px`;
-      megumin.style.height = `${blastSize}px`;
-      const boomX = parseInt(boom.style.left);
-      const boomY = parseInt(boom.style.top);
-      megumin.style.position = "absolute";
-      megumin.style.left = `${boomX - (blastSize / 2 - size / 2)}px`;
-      megumin.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
-      cage.appendChild(megumin);
-      setTimeout(() => megumin.remove(), 500);
     };
 
     // Add damage for walls
@@ -159,9 +260,9 @@ const placeBomb = () => {
           Math.abs(wallX - boomX) <= size * boom.dataset.range &&
           Math.abs(wallY - boomY) <= size * boom.dataset.range
         ) {
-          wall.dataset.health -= 1;
+          wall.dataset.health -= bomb_damage;
           if (wall.dataset.health <= 0) {
-            wall.remove();
+            setTimeout(() => wall.remove(), 500);
           }
         }
       }
@@ -169,7 +270,7 @@ const placeBomb = () => {
       // Add damage to the player
 
       const spriteDamage = () => {
-        spritehealth -= 1;
+        spritehealth -= bomb_damage;
         healthDisplay();
         sprite.classList.add("sprite_hit");
         setTimeout(() => sprite.classList.remove("sprite_hit"), 2000);
@@ -189,7 +290,7 @@ const placeBomb = () => {
 
       // Add damage to enemies
       const enemyDamage = () => {
-        enemyhealth -= 1;
+        enemyhealth -= bomb_damage;
         if (enemyhealth <= 0) {
           dropKey(enemyX, enemyY);
           enemy.remove();
@@ -197,21 +298,21 @@ const placeBomb = () => {
         }
       };
       const enemyTwoDamage = () => {
-        enemyhealth2 -= 1;
+        enemyhealth2 -= bomb_damage;
         if (enemyhealth2 <= 0) {
           enemytwo.remove();
           console.log("ENEMY TWO KILLED");
         }
       };
       const enemyThreeDamage = () => {
-        enemyhealth3 -= 1;
+        enemyhealth3 -= bomb_damage;
         if (enemyhealth3 <= 0) {
           enemythree.remove();
           console.log("ENEMY THREE KILLED");
         }
       };
       const enemyFourDamage = () => {
-        enemyhealth4 -= 1;
+        enemyhealth4 -= bomb_damage;
         if (enemyhealth4 <= 0) {
           enemyfour.remove();
           console.log("ENEMY FOUR KILLED");
@@ -256,40 +357,68 @@ const placeBomb = () => {
       setTimeout(() => (cage.style.animation = ""), 500);
       boom.remove();
       boom = null;
-    }, 2500);
+    }, 1500);
   }
 };
 
 // Event listener to drop a bomb
-
 document.addEventListener("keydown", (e) => {
-  if (e.key === " ") {
+  if (e.key === " " && !boom && canplacebomb) {
     e.preventDefault();
     placeBomb();
     // Display a sound when a bomb is dropped
-    const meguminsound = document.getElementById("explosiiion");
-    meguminsound.currentTime = 0;
-    meguminsound.play();
+    const megsound = document.getElementById("explosiiion");
+    megsound.currentTime = 0;
+    megsound.play();
   }
 });
 
+// If the bomb is placed, remove bomb icon
+const bombDisplay = () => {
+  const bombIcon = document.getElementById("bomb-icon");
+  if (canplacebomb) {
+    bombIcon.style.opacity = 1;
+  } else {
+    bombIcon.style.opacity = 0.5;
+  }
+};
+
+// #BUG Damage is not displayed correctly on every range, sometimes wall with one hp are not damaged by the bomb
+
 // Wall random generation
 window.addEventListener("load", () => {
-  for (let i = 0; i < 900; i++) {
-    const wall = document.createElement("div");
-    wall.className = "wall";
-    wall.dataset.health = 1;
-    wall.style.left = `${Math.floor(Math.random() * 25) * size}px`;
-    wall.style.top = `${Math.floor(1 + Math.random() * 25) * size}px`;
-    cage.appendChild(wall);
+  const doorX = parseInt(door.style.left);
+  const doorY = parseInt(door.style.top);
+
+  for (let i = 0; i < 1200; i++) {
+    // X and Y coordinates
+    const x = Math.floor(Math.random() * 25) * size;
+    const y = Math.floor(1 + Math.random() * 25) * size;
+    // Check if wall overlaps with door
+    const isOnDoor =
+      x < doorX + size &&
+      x + size > doorX &&
+      y < doorY + size &&
+      y + size > doorY;
+    // Create a wall only if it doesn't overlap with door
+    if (!isOnDoor) {
+      const wall = document.createElement("div");
+      wall.className = "wall";
+      wall.style.left = `${x}px`;
+      wall.style.top = `${y}px`;
+      wall.dataset.health = 2;
+      cage.appendChild(wall);
+    } else {
+      i--;
+    }
   }
 });
 
 // Add an exit door
-
-const door = document.createElement("div");
+const door = document.createElement("img");
 door.id = "exit-door";
 door.className = "door locked";
+door.src = "./assets/sprite/door.png";
 door.style.position = "absolute";
 door.style.left = "750px";
 door.style.top = "750px";
@@ -303,8 +432,9 @@ let keycount = 0;
 
 // Drop key
 const dropKey = (x, y) => {
-  const key = document.createElement("div");
+  const key = document.createElement("img");
   key.className = "key";
+  key.src = "./assets/sprite/key.png";
   key.style.position = "absolute";
   key.style.left = `${x}px`;
   key.style.top = `${y}px`;
@@ -324,13 +454,13 @@ const keysElements = () => {
     ) {
       keycount++;
       key.remove();
-      keydisplay();
       console.log("Key collected");
     }
     return;
   }
 };
 
+// Display key count on screen
 const keydisplay = () => {
   const keytext = document.querySelector(".keycounter");
   keytext.textContent = `Key: ${keycount}`;
@@ -386,21 +516,73 @@ const checkForCollision = (x, y) => {
 };
 
 // Add volume control
+let musicsound = 0.5;
+let voicesound = 1;
+let sfxsound = 0.3;
+const music_volume = document.getElementById("music-slider");
+const voice_volume = document.getElementById("voice-slider");
+const sfx_volume = document.getElementById("sfx-slider");
 
-const volume = document.getElementById("volume-slider");
-let gamesound = 0.1;
-
-const updateSoundVolume = () => {
-  const son = document.querySelectorAll("audio");
+const updateMusicVolume = () => {
+  const son = document.querySelectorAll(".music");
   for (const sons of son) {
-    sons.volume = gamesound;
+    sons.volume = musicsound;
   }
 };
 
-volume.addEventListener("input", (e) => {
-  gamesound = parseFloat(e.target.value);
-  updateSoundVolume();
+music_volume.addEventListener("input", (e) => {
+  musicsound = parseFloat(e.target.value);
+  updateMusicVolume();
 });
+
+const updateVoiceVolume = () => {
+  const son = document.querySelectorAll(".voice");
+  for (const sons of son) {
+    sons.volume = voicesound;
+  }
+};
+
+voice_volume.addEventListener("input", (e) => {
+  voicesound = parseFloat(e.target.value);
+  updateVoiceVolume();
+});
+
+const updateSFXVolume = () => {
+  const son = document.querySelectorAll(".sfx");
+  for (const sons of son) {
+    sons.volume = sfxsound;
+  }
+};
+
+sfx_volume.addEventListener("input", (e) => {
+  sfxsound = parseFloat(e.target.value);
+  updateSFXVolume();
+});
+
+// WIN SCREEN
+
+function showVictory() {
+  const victoryAlert = document.getElementById("victory-alert");
+  victoryAlert.classList.remove("hidden");
+
+  // FUTURE FEATURES: Add a next level button to the victory screen
+
+  // document.getElementById("victory-ok").onclick = () => {
+  //   victoryAlert.classList.add("hidden");
+  // };
+}
+
+// LOSE SCREEN
+
+function showDefeat() {
+  const defeatAlert = document.getElementById("defeat-alert");
+  defeatAlert.classList.remove("hidden");
+
+  document.getElementById("defeat-retry").onclick = () => {
+    defeatAlert.classList.add("hidden");
+    location.reload();
+  };
+}
 
 // Win condition function
 const wincondition = () => {
@@ -414,15 +596,85 @@ const wincondition = () => {
     if (keycount >= 1) {
       door.classList.remove("locked");
       door.classList.add("open");
-      displaytext.textContent = `Door is unlocked!`;
+      door.src = "./assets/sprite/door_open.png";
+
+      displaytext.textContent = `🔓 Door is unlocked!`;
+      displaytext.style.cssText = `background-color:#fafafa`;
+      setTimeout(() => {
+        showVictory();
+      }, 1000);
     } else {
-      displaytext.textContent = `Door is locked... \nI should find a key to open it.`;
+      displaytext.textContent = `🔒 Door is locked... \n🗝️ I should find a key to open it...`;
+      displaytext.style.cssText = `background-color:#fafafa`;
     }
   }
 };
+
+// Timer function for the game
+let gametime = 180; // 3 minutes
+const timerdisplay = document.querySelector("#chrono");
+
+const loseconditiontime = () => {
+  const timeinterval = setInterval(() => {
+    if (gamepaused) {
+      gametime--;
+      // FIXED Timer to show 0 in seconds
+      timerdisplay.textContent = `${Math.floor(gametime / 60)}:${String(
+        gametime % 60
+      ).padStart(2, "0")}`;
+      if (gametime <= 30) {
+        timerdisplay.classList.add("warning");
+      }
+      // If the player runs out of time, display a message and reload the game
+      if (gametime <= 0) {
+        clearInterval(timeinterval);
+        showDefeat();
+      }
+    }
+  }, 1000);
+};
+
+const loseconditionhealth = () => {
+  // If the player runs out of health, display a message and reload the game
+  if (spritehealth <= 0) {
+    showDefeat();
+  }
+};
+
 const gameloop = () => {
+  bombDisplay();
   keysElements();
   wincondition();
+  keydisplay();
+  loseconditionhealth();
+  updateMusicVolume();
+  updateVoiceVolume();
+  updateSFXVolume();
   requestAnimationFrame(gameloop);
 };
+loseconditiontime();
 gameloop();
+
+// Future features for score board
+
+// Save score to the local storage
+// localStorage.setItem("highscore", score);
+
+// On page load, check for last saved score
+// if (localStorage.getItem("highscore")) {
+//   console.log("Last highscore:", localStorage.getItem("highscore"));
+// }
+
+// ------------------------------
+
+// Future features treasure spawn
+
+// Treasure spawn function
+// let treasurespawn = false;
+// const bonustypes = ["bomb_damage"];
+
+// const spawntreasure = () => {
+//   // X and Y coordinates
+//   const x = Math.floor(Math.random() * 25) * size;
+//   const y = Math.floor(1 + Math.random() * 25) * size;
+// };
