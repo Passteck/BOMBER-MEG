@@ -1,4 +1,4 @@
-# MeguminBomber
+# BOMBER-MEG
 
 <p align="center">
   <a href="#english-version">🇬🇧 English</a> | 
