@@ -9,7 +9,6 @@
 }
 
 body {
-  background: center/cover url("img/background.png");
   color: #fafafa;
   height: 100vh;
   display: flex;
@@ -30,28 +29,37 @@ body {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background-color: #8b4513;
   background-image: linear-gradient(#ccc 1px, transparent 1px),
     linear-gradient(90deg, #ccc 1px, transparent 1px);
   background-size: var(--size) var(--size);
+  background-color: #8b4513;
+}
+
+.wall[data-health="1"] {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-image: linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: var(--size) var(--size);
+  background-color: #d3702a;
 }
 
 .open {
-  background-color: #fafa;
   width: var(--size);
   height: var(--size);
+  border-radius: 50%;
   z-index: 1;
 }
 
 .locked {
-  background-color: #222;
   width: var(--size);
   height: var(--size);
+  border-radius: 50%;
   z-index: 1;
 }
 
 .key {
-  background-color: #ffff00;
   width: var(--size);
   height: var(--size);
 }
@@ -87,12 +95,26 @@ body {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top:  15rem;
+  top: 20rem;
   left: 1rem;
   background: rgba(0, 0, 0, 0.7);
   padding: 5px 10px;
   border-radius: 10px;
   white-space: pre-line;
+}
+
+#timer {
+  position: absolute;
+  top: 15rem;
+  left: 7rem;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+#timer.warning {
+  color: #ff5555;
+  animation: warning 0.5s infinite alternate;
 }
 
 #volume-control {
@@ -108,8 +130,6 @@ body {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background: radial-gradient(circle, #ff0000, #8b0000);
-  animation: float 2s infinite alternate;
   z-index: 10;
 }
 
@@ -134,9 +154,54 @@ body {
 }
 
 .explosion {
-  width: var(--size);
-  height: var(--size);
   background: radial-gradient(circle, #ff4500, #ff8c00);
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#menuscreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: center/cover url("./assets/startmenu_background.png");
+  transition: opacity 1s linear;
+  z-index: 999;
+}
+
+#gamescreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: center/cover url("./assets/stage1_background.png");
+}
+
+#pausescreen {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa50;
+  backdrop-filter: blur(2px) saturate(5.78%) hue-rotate(360deg);
+  transition: opacity 0.5s linear;
+  z-index: 999;
+}
+
+.gameover {
+  animation: fadeout 1.5s ease forwards;
 }
 
 @keyframes pulse {
@@ -176,5 +241,21 @@ body {
 @keyframes blink {
   50% {
     opacity: 0.3;
+  }
+}
+
+@keyframes warning {
+  to {
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    background: #fafafa;
+  }
+  to {
+    background: #fafafa;
+    opacity: 0;
   }
 }
