@@ -1,7 +1,3 @@
-document.addEventListener("keydown", function (e) {
-  document.getElementById("output").innerHTML = "Vous avez pressé : " + e.key;
-});
-
 const size = 50;
 const cagesize = 800;
 const grid_steps = cagesize / size;
@@ -37,6 +33,7 @@ window.addEventListener("keydown", (e) => {
     gamescreen.classList.remove("hidden");
     menuscreen.classList.add("hidden");
     pausescreen.classList.add("hidden");
+    startGameMusic();
   }
 });
 
@@ -48,11 +45,71 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
+resume.addEventListener("click", () => {
+  if (gamepaused === false) {
+    gamepaused = true;
+    pausescreen.classList.add("hidden");
+  }
+});
+
 menubtn.addEventListener("click", () => {
   if (gamepaused === false) {
     location.reload();
   }
 });
+
+settings.addEventListener("click", () => {
+  if (gamepaused === false) {
+    settingsscreen.classList.remove("hidden");
+    pausescreen.classList.add("hidden");
+  }
+});
+
+backbtn.addEventListener("click", () => {
+  if (gamepaused === false) {
+    settingsscreen.classList.add("hidden");
+    pausescreen.classList.remove("hidden");
+  }
+});
+
+// Game music function
+const menuMusic = document.getElementById("music_menu");
+const gameMusicstage1 = document.getElementById("music_stage1");
+
+const startGameMusic = () => {
+  menuMusic.pause();
+  gameMusicstage1.play();
+  audioUnlocker.style.display = "none";
+};
+
+// Create the unlock button when audio permission is denied for the menu music
+const audioUnlocker = document.createElement("button");
+audioUnlocker.innerHTML = "🔇";
+audioUnlocker.style.cssText = `
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 9999;
+  background: none;
+  scale: 4;
+  border: none;
+`;
+document.body.appendChild(audioUnlocker);
+
+menuMusic
+  .play()
+  .then(() => {})
+  .catch((e) => {
+    audioUnlocker.style.transform = "translateY(0)";
+    console.log("Autoplay blocked! Showing unlock button");
+  });
+
+audioUnlocker.addEventListener("click", () => {
+  menuMusic.play().then(() => {
+    audioUnlocker.innerHTML = "";
+  });
+});
+
 // Load a default position for player
 window.addEventListener("load", () => {
   sprite.style.position = "absolute";
@@ -104,18 +161,22 @@ window.addEventListener("keydown", (e) => {
   newtop = top;
   switch (e.key) {
     case "ArrowLeft":
+    case "q":
       newleft = Math.max(0, left - moveBy);
       break;
 
     case "ArrowRight":
+    case "d":
       newleft = Math.min(cagesize - size, left + moveBy);
       break;
 
     case "ArrowUp":
+    case "z":
       newtop = Math.max(0, top - moveBy);
       break;
 
     case "ArrowDown":
+    case "s":
       newtop = Math.min(cagesize - size, top + moveBy);
       break;
   }
@@ -129,13 +190,12 @@ window.addEventListener("keydown", (e) => {
 // Display player health
 const healthDisplay = () => {
   const healthicon = document.getElementById("health-icon");
-  const healthtext = document.getElementById("health-text");
-
   // With heart
   healthicon.innerHTML =
-    "❤️".repeat(spritehealth) + "💔".repeat(maxHealth - spritehealth);
-  // With text
-  healthtext.textContent = `HP: ${spritehealth} / ${maxHealth}`;
+    '<span class="heart">&hearts;</span>'.repeat(spritehealth) +
+    '<span class="empty-heart">&hearts;</span>'.repeat(
+      maxHealth - spritehealth
+    );
 
   // Add a pulse effect
   // #BUG Pulse effect doesn't work for now
@@ -317,9 +377,9 @@ document.addEventListener("keydown", (e) => {
 const bombDisplay = () => {
   const bombIcon = document.getElementById("bomb-icon");
   if (canplacebomb) {
-    bombIcon.textContent = "💣";
+    bombIcon.style.opacity = 1;
   } else {
-    bombIcon.textContent = " ";
+    bombIcon.style.opacity = 0.5;
   }
 };
 
@@ -358,21 +418,11 @@ window.addEventListener("load", () => {
 const door = document.createElement("img");
 door.id = "exit-door";
 door.className = "door locked";
-door.src = "./assets/door.png";
+door.src = "./assets/sprite/door.png";
 door.style.position = "absolute";
 door.style.left = "750px";
 door.style.top = "750px";
 cage.appendChild(door);
-
-// Treasure spawn function
-let treasurespawn = false;
-const bonustypes = ["bomb_damage"];
-
-const spawntreasure = () => {
-  // X and Y coordinates
-  const x = Math.floor(Math.random() * 25) * size;
-  const y = Math.floor(1 + Math.random() * 25) * size;
-};
 
 //  #BUG Key is not working/Player can't take keys
 // FIXED (forgot to put  requestAnimationFrame(gameloop); in the gameloop function)
@@ -384,7 +434,7 @@ let keycount = 0;
 const dropKey = (x, y) => {
   const key = document.createElement("img");
   key.className = "key";
-  key.src = "./assets/key.png";
+  key.src = "./assets/sprite/key.png";
   key.style.position = "absolute";
   key.style.left = `${x}px`;
   key.style.top = `${y}px`;
@@ -466,21 +516,73 @@ const checkForCollision = (x, y) => {
 };
 
 // Add volume control
+let musicsound = 0.5;
+let voicesound = 1;
+let sfxsound = 0.3;
+const music_volume = document.getElementById("music-slider");
+const voice_volume = document.getElementById("voice-slider");
+const sfx_volume = document.getElementById("sfx-slider");
 
-const volume = document.getElementById("volume-slider");
-let gamesound = 0.1;
-
-const updateSoundVolume = () => {
-  const son = document.querySelectorAll("audio");
+const updateMusicVolume = () => {
+  const son = document.querySelectorAll(".music");
   for (const sons of son) {
-    sons.volume = gamesound;
+    sons.volume = musicsound;
   }
 };
 
-volume.addEventListener("input", (e) => {
-  gamesound = parseFloat(e.target.value);
-  updateSoundVolume();
+music_volume.addEventListener("input", (e) => {
+  musicsound = parseFloat(e.target.value);
+  updateMusicVolume();
 });
+
+const updateVoiceVolume = () => {
+  const son = document.querySelectorAll(".voice");
+  for (const sons of son) {
+    sons.volume = voicesound;
+  }
+};
+
+voice_volume.addEventListener("input", (e) => {
+  voicesound = parseFloat(e.target.value);
+  updateVoiceVolume();
+});
+
+const updateSFXVolume = () => {
+  const son = document.querySelectorAll(".sfx");
+  for (const sons of son) {
+    sons.volume = sfxsound;
+  }
+};
+
+sfx_volume.addEventListener("input", (e) => {
+  sfxsound = parseFloat(e.target.value);
+  updateSFXVolume();
+});
+
+// WIN SCREEN
+
+function showVictory() {
+  const victoryAlert = document.getElementById("victory-alert");
+  victoryAlert.classList.remove("hidden");
+
+  // FUTURE FEATURES: Add a next level button to the victory screen
+
+  // document.getElementById("victory-ok").onclick = () => {
+  //   victoryAlert.classList.add("hidden");
+  // };
+}
+
+// LOSE SCREEN
+
+function showDefeat() {
+  const defeatAlert = document.getElementById("defeat-alert");
+  defeatAlert.classList.remove("hidden");
+
+  document.getElementById("defeat-retry").onclick = () => {
+    defeatAlert.classList.add("hidden");
+    location.reload();
+  };
+}
 
 // Win condition function
 const wincondition = () => {
@@ -494,39 +596,39 @@ const wincondition = () => {
     if (keycount >= 1) {
       door.classList.remove("locked");
       door.classList.add("open");
+      door.src = "./assets/sprite/door_open.png";
+
       displaytext.textContent = `🔓 Door is unlocked!`;
+      displaytext.style.cssText = `background-color:#fafafa`;
       setTimeout(() => {
-        alert("You won!");
-        location.reload();
+        showVictory();
       }, 1000);
     } else {
       displaytext.textContent = `🔒 Door is locked... \n🗝️ I should find a key to open it...`;
+      displaytext.style.cssText = `background-color:#fafafa`;
     }
   }
 };
 
 // Timer function for the game
 let gametime = 180; // 3 minutes
-const timerdisplay = document.querySelector("#timer");
+const timerdisplay = document.querySelector("#chrono");
 
 const loseconditiontime = () => {
   const timeinterval = setInterval(() => {
     if (gamepaused) {
       gametime--;
-      timerdisplay.textContent = `⏱️ ${Math.floor(gametime / 60)}:${
+      // FIXED Timer to show 0 in seconds
+      timerdisplay.textContent = `${Math.floor(gametime / 60)}:${String(
         gametime % 60
-      }`;
+      ).padStart(2, "0")}`;
       if (gametime <= 30) {
         timerdisplay.classList.add("warning");
       }
       // If the player runs out of time, display a message and reload the game
       if (gametime <= 0) {
         clearInterval(timeinterval);
-        setTimeout(() => {
-          document.body.classList.add("gameover");
-          alert("Time's up! You lost!");
-          location.reload();
-        }, 1000);
+        showDefeat();
       }
     }
   }, 1000);
@@ -535,11 +637,7 @@ const loseconditiontime = () => {
 const loseconditionhealth = () => {
   // If the player runs out of health, display a message and reload the game
   if (spritehealth <= 0) {
-    document.body.classList.add("gameover");
-    setTimeout(() => {
-      alert("You lost!");
-      location.reload();
-    }, 1000);
+    showDefeat();
   }
 };
 
@@ -549,6 +647,9 @@ const gameloop = () => {
   wincondition();
   keydisplay();
   loseconditionhealth();
+  updateMusicVolume();
+  updateVoiceVolume();
+  updateSFXVolume();
   requestAnimationFrame(gameloop);
 };
 loseconditiontime();
@@ -563,3 +664,17 @@ gameloop();
 // if (localStorage.getItem("highscore")) {
 //   console.log("Last highscore:", localStorage.getItem("highscore"));
 // }
+
+// ------------------------------
+
+// Future features treasure spawn
+
+// Treasure spawn function
+// let treasurespawn = false;
+// const bonustypes = ["bomb_damage"];
+
+// const spawntreasure = () => {
+//   // X and Y coordinates
+//   const x = Math.floor(Math.random() * 25) * size;
+//   const y = Math.floor(1 + Math.random() * 25) * size;
+// };
