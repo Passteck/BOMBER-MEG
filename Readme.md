@@ -110,3 +110,4 @@ _Une aventure explosive en pixels !_
 - [ ] Effets visuels d'explosion animés
 - [ ] Système de high score
 ```
+

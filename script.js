@@ -1,32 +1,51 @@
-const size = 50;
-const cagesize = 800;
-const grid_steps = cagesize / size;
+// => GameConfig.js
+
+const grid_size = 50;
+const arena_size = 800;
+const grid_steps = arena_size / grid_size;
+
+// -----------------------------------------
+
+// => GameState.js
 const cage = document.querySelector(".cage");
+
+// -----------------------------------------
+
+// => Player.js
+let moveBy = grid_size;
+
+// -----------------------------------------
+
+// Player => Player.js
 const sprite = document.querySelector(".sprite");
+const playerSize = 50;
+let maxHealth = 3;
+let spritehealth = maxHealth;
+
+// -----------------------------------------
+
+// Enemies => Enemy.js
 const enemy = document.querySelector(".enemy");
 const enemytwo = document.querySelector(".enemy_2");
 const enemythree = document.querySelector(".enemy_3");
 const enemyfour = document.querySelector(".enemy_4");
-let moveBy = size;
-let boom;
-const playerSize = size;
-
-// Player health
-let maxHealth = 3;
-let spritehealth = maxHealth;
-// Enemies health
 let enemyhealth = 1;
 let enemyhealth2 = 1;
 let enemyhealth3 = 1;
 let enemyhealth4 = 1;
 
-// Start screen
+// -----------------------------------------
+
+// Start screen => UIManager.js
 let gamepaused = false;
 const menuscreen = document.querySelector("#menuscreen");
-// Game screen
+
+// Game screen => UIManager.js
 const gamescreen = document.querySelector("#gamescreen");
 
-// Start game
+// -----------------------------------------
+
+// Start game => input.js
 window.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && gamepaused === false) {
     gamepaused = true;
@@ -37,7 +56,7 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// Paused game
+// Paused game => input.js
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && gamepaused === true) {
     gamepaused = false;
@@ -72,7 +91,9 @@ backbtn.addEventListener("click", () => {
   }
 });
 
-// Game music function
+// ----------------------------------------
+
+// Game music function => audio.js
 const menuMusic = document.getElementById("music_menu");
 const gameMusicstage1 = document.getElementById("music_stage1");
 
@@ -82,7 +103,7 @@ const startGameMusic = () => {
   audioUnlocker.style.display = "none";
 };
 
-// Create the unlock button when audio permission is denied for the menu music
+// Create the unlock button when audio permission is denied for the menu music => audio.js
 const audioUnlocker = document.createElement("button");
 audioUnlocker.innerHTML = "🔇";
 audioUnlocker.style.cssText = `
@@ -110,49 +131,48 @@ audioUnlocker.addEventListener("click", () => {
   });
 });
 
-// Load a default position for player
-window.addEventListener("load", () => {
-  sprite.style.position = "absolute";
-  sprite.style.left = "0px";
-  sprite.style.top = "0px";
-});
+// ---------------------------------------------
 
-// Add a random spawn for enemy
+// Add a random spawn for enemy => Enemy.js
 const getrandomvalue = (max) => {
   return Math.floor(Math.random() * max);
 };
-window.addEventListener("load", () => {
-  enemy.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemy.style.top = getrandomvalue(grid_steps) * size + "px";
-  // enemy deux
-  enemytwo.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemytwo.style.top = getrandomvalue(grid_steps) * size + "px";
-  // enemy trois
-  enemythree.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemythree.style.top = getrandomvalue(grid_steps) * size + "px";
-  // enemyfour
-  enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
-});
+enemy.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+enemy.style.top = getrandomvalue(grid_steps) * grid_size + "px";
+// enemy deux
+enemytwo.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+enemytwo.style.top = getrandomvalue(grid_steps) * grid_size + "px";
+// enemy trois
+enemythree.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+enemythree.style.top = getrandomvalue(grid_steps) * grid_size + "px";
+// enemyfour
+enemyfour.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+enemyfour.style.top = getrandomvalue(grid_steps) * grid_size + "px";
 
-// Random movement for enemy
-
+// Random movement for enemy => Enemy.js
 setInterval(() => {
   if (!gamepaused) return;
-  enemy.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemy.style.top = getrandomvalue(grid_steps) * size + "px";
+  enemy.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+  enemy.style.top = getrandomvalue(grid_steps) * grid_size + "px";
   // enemy deux
-  enemytwo.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemytwo.style.top = getrandomvalue(grid_steps) * size + "px";
+  enemytwo.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+  enemytwo.style.top = getrandomvalue(grid_steps) * grid_size + "px";
   // enemy trois
-  enemythree.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemythree.style.top = getrandomvalue(grid_steps) * size + "px";
+  enemythree.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+  enemythree.style.top = getrandomvalue(grid_steps) * grid_size + "px";
   // enemyfour
-  enemyfour.style.left = getrandomvalue(grid_steps) * size + "px";
-  enemyfour.style.top = getrandomvalue(grid_steps) * size + "px";
+  enemyfour.style.left = getrandomvalue(grid_steps) * grid_size + "px";
+  enemyfour.style.top = getrandomvalue(grid_steps) * grid_size + "px";
 }, 5000);
 
-// Player movement
+// -----------------------------------------
+
+// Load a default position for player => Player.js
+sprite.style.position = "absolute";
+sprite.style.left = "0px";
+sprite.style.top = "0px";
+
+// Player movement => Player.js
 window.addEventListener("keydown", (e) => {
   if (!gamepaused) return;
   let left = parseInt(sprite.style.left) || 0;
@@ -167,7 +187,7 @@ window.addEventListener("keydown", (e) => {
 
     case "ArrowRight":
     case "d":
-      newleft = Math.min(cagesize - size, left + moveBy);
+      newleft = Math.min(arena_size - grid_size, left + moveBy);
       break;
 
     case "ArrowUp":
@@ -177,7 +197,7 @@ window.addEventListener("keydown", (e) => {
 
     case "ArrowDown":
     case "s":
-      newtop = Math.min(cagesize - size, top + moveBy);
+      newtop = Math.min(arena_size - grid_size, top + moveBy);
       break;
   }
 
@@ -187,7 +207,9 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-// Display player health
+// ------------------------------------------
+
+// Display player health => UIManager.js
 const healthDisplay = () => {
   const healthicon = document.getElementById("health-icon");
   // With heart
@@ -205,7 +227,10 @@ const healthDisplay = () => {
   // }
 };
 
-// Bomb function
+// -------------------------------------
+
+// Bomb function => Bomb.js
+let boom;
 let canplacebomb = true;
 const bombcooldown = 6000;
 const bomb_damage = 1;
@@ -222,21 +247,24 @@ const placeBomb = () => {
     cage.appendChild(boom);
 
     // Bomb cooldown
-    setTimeout(() => (canplacebomb = true), bombcooldown);
+
+    setTimeout(() => {
+      canplacebomb = true;
+    }, bombcooldown);
 
     // Bomb explosion
     const spawnExplode = () => {
       const meg = document.createElement("div");
       meg.className = "explosion";
-      const blastSize = size * boom.dataset.range * 3;
+      const blastSize = grid_size * boom.dataset.range * 3;
 
       meg.style.width = `${blastSize}px`;
       meg.style.height = `${blastSize}px`;
       const boomX = parseInt(boom.style.left);
       const boomY = parseInt(boom.style.top);
       meg.style.position = "absolute";
-      meg.style.left = `${boomX - (blastSize / 2 - size / 2)}px`;
-      meg.style.top = `${boomY - (blastSize / 2 - size / 2)}px`;
+      meg.style.left = `${boomX - (blastSize / 2 - grid_size / 2)}px`;
+      meg.style.top = `${boomY - (blastSize / 2 - grid_size / 2)}px`;
       cage.appendChild(meg);
       setTimeout(() => meg.remove(), 1000);
 
@@ -257,8 +285,8 @@ const placeBomb = () => {
         const wallX = parseInt(wall.style.left);
         const wallY = parseInt(wall.style.top);
         if (
-          Math.abs(wallX - boomX) <= size * boom.dataset.range &&
-          Math.abs(wallY - boomY) <= size * boom.dataset.range
+          Math.abs(wallX - boomX) <= grid_size * boom.dataset.range &&
+          Math.abs(wallY - boomY) <= grid_size * boom.dataset.range
         ) {
           wall.dataset.health -= bomb_damage;
           if (wall.dataset.health <= 0) {
@@ -282,8 +310,8 @@ const placeBomb = () => {
       const spriteX = parseInt(sprite.style.left);
       const spriteY = parseInt(sprite.style.top);
       if (
-        Math.abs(spriteX - boomX) <= size * boom.dataset.range &&
-        Math.abs(spriteY - boomY) <= size * boom.dataset.range
+        Math.abs(spriteX - boomX) <= grid_size * boom.dataset.range &&
+        Math.abs(spriteY - boomY) <= grid_size * boom.dataset.range
       ) {
         spriteDamage();
       }
@@ -328,23 +356,23 @@ const placeBomb = () => {
       const enemyX4 = parseInt(enemyfour.style.left);
       const enemyY4 = parseInt(enemyfour.style.top);
       if (
-        Math.abs(enemyX - boomX) <= size * boom.dataset.range &&
-        Math.abs(enemyY - boomY) <= size * boom.dataset.range
+        Math.abs(enemyX - boomX) <= grid_size * boom.dataset.range &&
+        Math.abs(enemyY - boomY) <= grid_size * boom.dataset.range
       ) {
         enemyDamage();
       } else if (
-        Math.abs(enemyX2 - boomX) <= size * boom.dataset.range &&
-        Math.abs(enemyY2 - boomY) <= size * boom.dataset.range
+        Math.abs(enemyX2 - boomX) <= grid_size * boom.dataset.range &&
+        Math.abs(enemyY2 - boomY) <= grid_size * boom.dataset.range
       ) {
         enemyTwoDamage();
       } else if (
-        Math.abs(enemyX3 - boomX) <= size * boom.dataset.range &&
-        Math.abs(enemyY3 - boomY) <= size * boom.dataset.range
+        Math.abs(enemyX3 - boomX) <= grid_size * boom.dataset.range &&
+        Math.abs(enemyY3 - boomY) <= grid_size * boom.dataset.range
       ) {
         enemyThreeDamage();
       } else if (
-        Math.abs(enemyX4 - boomX) <= size * boom.dataset.range &&
-        Math.abs(enemyY4 - boomY) <= size * boom.dataset.range
+        Math.abs(enemyX4 - boomX) <= grid_size * boom.dataset.range &&
+        Math.abs(enemyY4 - boomY) <= grid_size * boom.dataset.range
       ) {
         enemyFourDamage();
       }
@@ -361,7 +389,7 @@ const placeBomb = () => {
   }
 };
 
-// Event listener to drop a bomb
+// Event listener to drop a bomb => Bomb.js
 document.addEventListener("keydown", (e) => {
   if (e.key === " " && !boom && canplacebomb) {
     e.preventDefault();
@@ -373,7 +401,9 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-// If the bomb is placed, remove bomb icon
+// --------------------------------------------
+
+// If the bomb is placed, remove bomb icon => UIManager.js
 const bombDisplay = () => {
   const bombIcon = document.getElementById("bomb-icon");
   if (canplacebomb) {
@@ -383,23 +413,25 @@ const bombDisplay = () => {
   }
 };
 
+// --------------------------------------------
+
 // #BUG Damage is not displayed correctly on every range, sometimes wall with one hp are not damaged by the bomb
 
-// Wall random generation
+// Wall random generation => Wall.js
 window.addEventListener("load", () => {
   const doorX = parseInt(door.style.left);
   const doorY = parseInt(door.style.top);
 
   for (let i = 0; i < 1200; i++) {
     // X and Y coordinates
-    const x = Math.floor(Math.random() * 25) * size;
-    const y = Math.floor(1 + Math.random() * 25) * size;
+    const x = Math.floor(Math.random() * 25) * grid_size;
+    const y = Math.floor(1 + Math.random() * 25) * grid_size;
     // Check if wall overlaps with door
     const isOnDoor =
-      x < doorX + size &&
-      x + size > doorX &&
-      y < doorY + size &&
-      y + size > doorY;
+      x < doorX + grid_size &&
+      x + grid_size > doorX &&
+      y < doorY + grid_size &&
+      y + grid_size > doorY;
     // Create a wall only if it doesn't overlap with door
     if (!isOnDoor) {
       const wall = document.createElement("div");
@@ -414,7 +446,9 @@ window.addEventListener("load", () => {
   }
 });
 
-// Add an exit door
+// -----------------------------------------
+
+// Add an exit door => LevelManager.js
 const door = document.createElement("img");
 door.id = "exit-door";
 door.className = "door locked";
@@ -424,13 +458,15 @@ door.style.left = "750px";
 door.style.top = "750px";
 cage.appendChild(door);
 
+// -----------------------------------------------
+
 //  #BUG Key is not working/Player can't take keys
 // FIXED (forgot to put  requestAnimationFrame(gameloop); in the gameloop function)
 
-// Key variable
+// Key variable => Key.js
 let keycount = 0;
 
-// Drop key
+// Drop key => Key.js
 const dropKey = (x, y) => {
   const key = document.createElement("img");
   key.className = "key";
@@ -441,7 +477,7 @@ const dropKey = (x, y) => {
   cage.appendChild(key);
 };
 
-// Key collection
+// Key collection => Key.js
 
 const keysElements = () => {
   const keys = document.querySelectorAll(".key");
@@ -460,12 +496,17 @@ const keysElements = () => {
   }
 };
 
-// Display key count on screen
+// -----------------------------------------
+
+// Display key count on screen => UIManager.js
 const keydisplay = () => {
   const keytext = document.querySelector(".keycounter");
   keytext.textContent = `Key: ${keycount}`;
 };
-// Collision
+
+// -----------------------------------------
+
+// Collision => Collision.js
 
 const collisionElements = () => {
   return {
@@ -515,7 +556,9 @@ const checkForCollision = (x, y) => {
   return false;
 };
 
-// Add volume control
+// -----------------------------------------
+
+// Add volume control => audio.js
 let musicsound = 0.5;
 let voicesound = 1;
 let sfxsound = 0.3;
@@ -559,24 +602,29 @@ sfx_volume.addEventListener("input", (e) => {
   updateSFXVolume();
 });
 
-// WIN SCREEN
+// WIN SCREEN => VictoryScreen.js
 
 function showVictory() {
   const victoryAlert = document.getElementById("victory-alert");
   victoryAlert.classList.remove("hidden");
+  gamepaused = false;
 
   // FUTURE FEATURES: Add a next level button to the victory screen
 
-  // document.getElementById("victory-ok").onclick = () => {
-  //   victoryAlert.classList.add("hidden");
-  // };
+  document.getElementById("victory-ok").onclick = () => {
+    victoryAlert.classList.add("hidden");
+    location.reload();
+  };
 }
 
-// LOSE SCREEN
+// -----------------------------------------
+
+// LOSE SCREEN => LoseScreen.js
 
 function showDefeat() {
   const defeatAlert = document.getElementById("defeat-alert");
   defeatAlert.classList.remove("hidden");
+  gamepaused = false;
 
   document.getElementById("defeat-retry").onclick = () => {
     defeatAlert.classList.add("hidden");
@@ -584,7 +632,9 @@ function showDefeat() {
   };
 }
 
-// Win condition function
+// -----------------------------------------
+
+// Win condition function => LevelManager.js
 const wincondition = () => {
   const displaytext = document.querySelector("#messagetext");
   if (
@@ -600,9 +650,7 @@ const wincondition = () => {
 
       displaytext.textContent = `🔓 Door is unlocked!`;
       displaytext.style.cssText = `background-color:#fafafa`;
-      setTimeout(() => {
-        showVictory();
-      }, 1000);
+      showVictory();
     } else {
       displaytext.textContent = `🔒 Door is locked... \n🗝️ I should find a key to open it...`;
       displaytext.style.cssText = `background-color:#fafafa`;
@@ -610,7 +658,9 @@ const wincondition = () => {
   }
 };
 
-// Timer function for the game
+// -----------------------------------------
+
+// Timer function for the game => GameTimer.js
 let gametime = 180; // 3 minutes
 const timerdisplay = document.querySelector("#chrono");
 
@@ -634,12 +684,20 @@ const loseconditiontime = () => {
   }, 1000);
 };
 
+// -----------------------------------------
+
+// Lose Condition => LevelManager.js
+
 const loseconditionhealth = () => {
   // If the player runs out of health, display a message and reload the game
   if (spritehealth <= 0) {
     showDefeat();
   }
 };
+
+// -----------------------------------------
+
+// Gameloop => GameLoop.js
 
 const gameloop = () => {
   bombDisplay();
@@ -655,7 +713,9 @@ const gameloop = () => {
 loseconditiontime();
 gameloop();
 
-// Future features for score board
+// -----------------------------------------
+
+// Future features for score board => Scoreboard.js
 
 // Save score to the local storage
 // localStorage.setItem("highscore", score);
@@ -665,9 +725,9 @@ gameloop();
 //   console.log("Last highscore:", localStorage.getItem("highscore"));
 // }
 
-// ------------------------------
+// -----------------------------------------
 
-// Future features treasure spawn
+// Future features treasure spawn => Treasure.js
 
 // Treasure spawn function
 // let treasurespawn = false;
@@ -675,6 +735,10 @@ gameloop();
 
 // const spawntreasure = () => {
 //   // X and Y coordinates
-//   const x = Math.floor(Math.random() * 25) * size;
-//   const y = Math.floor(1 + Math.random() * 25) * size;
+//   const x = Math.floor(Math.random() * 25) * grid_size;
+//   const y = Math.floor(1 + Math.random() * 25) * grid_size;
 // };
+
+// -----------------------------------------
+
+// Future features for skins => SkinManager.js
