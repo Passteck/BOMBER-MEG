@@ -1,4 +1,4 @@
-# MeguminBomber
+# BOMBER-MEG
 
 <p align="center">
   <a href="#english-version">🇬🇧 English</a> | 
@@ -110,3 +110,4 @@ _Une aventure explosive en pixels !_
 - [ ] Effets visuels d'explosion animés
 - [ ] Système de high score
 ```
+

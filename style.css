@@ -204,7 +204,7 @@ body {
   overflow: hidden;
   height: var(--cage);
   width: var(--cage);
-  background: #818080cf;
+  background: #0f8434b1;
   backdrop-filter: blur(5px);
   border: 1px solid black;
   border-radius: 0.5rem;

@@ -1,0 +1,1 @@
+// Future features for skins => SkinManager.js
