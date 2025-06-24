@@ -38,7 +38,7 @@ import { cage } from "../core/GameState.js";
 import { sprite, playerSize } from "../player/Player.js";
 
 // ========== CONFIG ========== //
-export let keycount = 0; // Now exportable~!
+export let keycount = 0; 
 
 // ========== CORE FUNCTIONS ========== //
 export const dropKey = (x, y) => {
@@ -49,10 +49,9 @@ export const dropKey = (x, y) => {
     position: absolute;
     left: ${x}px;
     top: ${y}px;
-    z-index: 10; /* Ensure key appears above other elements */
   `;
   cage.appendChild(key);
-  console.log(`🔑 Key dropped at (${x}, ${y})`); // Debug~
+  console.log(`🔑 Key dropped at (${x}, ${y})`);
 };
 
 export const keysElements = () => {
@@ -61,7 +60,6 @@ export const keysElements = () => {
       keycount++;
       key.remove();
       console.log("🎉 Key collected! Total:", keycount);
-      // Play sound? keyCollectSound.play();
     }
   });
 };

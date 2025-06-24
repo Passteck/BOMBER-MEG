@@ -10,7 +10,9 @@ export const playerSize = 50;
 // Player => Player.js
 // Player health
 export const maxHealth = 3;
-export let spritehealth = maxHealth;
+export let spritehealth = {
+  health: maxHealth,
+};
 
 export const sprite = document.querySelector(".sprite");
 export const initPlayer = () => {
@@ -58,7 +60,7 @@ export const initPlayer = () => {
 
 export const initPlayerMovement = () => {
   const handleKeydown = (e) => {
-    if (!gamepaused) return;
+    if (!gamepaused.paused) return;
     
     const left = parseInt(sprite.style.left) || 0;
     const top = parseInt(sprite.style.top) || 0;

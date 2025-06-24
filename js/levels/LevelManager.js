@@ -6,7 +6,9 @@ import { keycount } from "../items/Key.js";
 import { showVictory } from "../ui/VictoryScreen.js";
 import { showDefeat } from "../ui/LoseScreen.js";
 
-const door = document.createElement("img");
+
+
+export const door = document.createElement("img");
 door.id = "exit-door";
 door.className = "door locked";
 door.src = "./assets/sprite/door.png";
@@ -14,19 +16,6 @@ door.style.position = "absolute";
 door.style.left = "750px";
 door.style.top = "750px";
 cage.appendChild(door);
-
-// export const createExitDoor = (cage, xPos = 750, yPos = 750) => {
-//   const door = document.createElement("img");
-//   door.id = "exit-door";
-//   door.className = "door locked";
-//   door.src = "./assets/sprite/door.png";
-//   door.style.position = "absolute";
-//   door.style.left = `${xPos}px`;
-//   door.style.top = `${yPos}px`;
-  
-//   cage.appendChild(door);
-//   return door;
-// }
 
 // Win condition function => LevelManager.js
 export const wincondition = () => {
@@ -56,7 +45,7 @@ export const wincondition = () => {
 
 export const loseconditionhealth = () => {
   // If the player runs out of health, display a message and reload the game
-  if (spritehealth <= 0) {
+  if (spritehealth.health <= 0) {
     showDefeat();
   }
 };

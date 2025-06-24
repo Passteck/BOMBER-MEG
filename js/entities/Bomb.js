@@ -174,6 +174,8 @@ import { sprite } from "../player/Player.js";
 import { cage } from "../core/GameState.js";
 import { grid_size } from "../core/GameConfig.js";
 import { dropKey } from "../items/Key.js";
+import { spritehealth } from "../player/Player.js";
+import { healthDisplay } from "../ui/UIManager.js";
 
 // ========== CONFIG ========== //
 export const bombConfig = {
@@ -186,7 +188,7 @@ export const bombConfig = {
 
 // ========== STATE ========== //
 let boom = null;
-let canPlaceBomb = true;
+export let canPlaceBomb = true;
 const explosionSound = document.getElementById("boom");
 const placeSound = document.getElementById("explosiiion");
 
@@ -227,11 +229,11 @@ const damageEntitiesInRadius = (boomX, boomY, range) => {
   const playerY = parseInt(sprite.style.top);
   if (Math.abs(playerX - boomX) <= grid_size * range && 
       Math.abs(playerY - boomY) <= grid_size * range) {
-    spritehealth -= bombConfig.damage;
+    spritehealth.health -= bombConfig.damage;
     healthDisplay();
     sprite.classList.add("sprite_hit");
     setTimeout(() => sprite.classList.remove("sprite_hit"), 2000);
-    if (spritehealth <= 0) sprite.remove();
+    if (spritehealth.health <= 0) sprite.remove();
   }
 
   // Damage enemies
@@ -250,7 +252,7 @@ const damageEntitiesInRadius = (boomX, boomY, range) => {
 };
 
 export const placeBomb = () => {
-  if (!gamepaused || !canPlaceBomb || boom) return;
+  if (!gamepaused.paused || !canPlaceBomb || boom) return;
   
   canPlaceBomb = false;
   boom = document.createElement("div");
