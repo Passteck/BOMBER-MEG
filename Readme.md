@@ -40,6 +40,8 @@ _A bomb-tastic pixel adventure!_
 - [x] Explosion damage system
 - [x] Wall destruction
 - [ ] Treasure chests with random bonuses
+  - [x] Treasure chests
+  - [x] Bonus: Damage potion
 
 ### ⚙️ Systems
 
@@ -93,6 +95,8 @@ _Une aventure explosive en pixels !_
 - [x] Système de dégâts par explosion
 - [x] Destruction des murs
 - [ ] Coffres avec bonus aléatoires
+  - [x] Coffres
+  - [x] Bonus: Potion de boost de dommage
 
 ### ⚙️ Systèmes
 
@@ -110,4 +114,3 @@ _Une aventure explosive en pixels !_
 - [ ] Effets visuels d'explosion animés
 - [ ] Système de high score
 ```
-

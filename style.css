@@ -39,7 +39,7 @@ body {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background-image: url("./assets/sprite/tree.png");
+  background-image: url("./assets/sprite/tree.webp");
   background-size: var(--size) var(--size);
   background-color: #00000000;
 }
@@ -48,23 +48,45 @@ body {
   position: absolute;
   width: var(--size);
   height: var(--size);
-  background-image: url("./assets/sprite/broken_tree.png");
+  background-image: url("./assets/sprite/broken_tree.webp");
   background-size: 25px 30px;
   background-repeat: no-repeat;
   background-position: bottom;
   background-color: #00000000;
 }
 
+.chest {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-image: url("./assets/sprite/chest.webp");
+  background-size: var(--size) var(--size);
+  background-color: #00000000;
+}
+
+.chest[data-health="0"] {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  background-image: url("./assets/sprite/chest_open.webp");
+  background-size: var(--size) var(--size);
+  background-color: #00000000;
+}
+
+.potion {
+  width: var(--size);
+  height: var(--size);
+  scale: 0.5;
+}
+
 .open {
   width: var(--size);
   height: var(--size);
-  border-radius: 50%;
 }
 
 .locked {
   width: var(--size);
   height: var(--size);
-  border-radius: 50%;
 }
 
 .key {
@@ -238,7 +260,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: center/cover url("./assets/background/startmenu_background.png");
+  background: center/cover url("./assets/background/startmenu_background.webp");
   transition: opacity 1s linear;
   z-index: 999;
 }
@@ -251,7 +273,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: center/cover url("./assets/background/stage1_background.png");
+  background: center/cover url("./assets/background/stage1_background.webp");
 }
 
 #settingsscreen {
