@@ -11,7 +11,7 @@ import { showDefeat } from "../ui/LoseScreen.js";
 export const door = document.createElement("img");
 door.id = "exit-door";
 door.className = "door locked";
-door.src = "./assets/sprite/door.png";
+door.src = "./assets/sprite/door.webp";
 door.style.position = "absolute";
 door.style.left = "750px";
 door.style.top = "750px";
@@ -29,7 +29,8 @@ export const wincondition = () => {
     if (keycount >= 1) {
       door.classList.remove("locked");
       door.classList.add("open");
-      door.src = "./assets/sprite/door_open.png";
+      door.src = "./assets/sprite/door_open.webp";
+      
 
       displaytext.textContent = `🔓 Door is unlocked!`;
       displaytext.style.cssText = `background-color:#fafafa`;

@@ -1,4 +1,7 @@
 // Timer function for the game => GameTimer.js
+import { gamepaused } from "../ui/UIManager.js";
+import { showDefeat } from "../ui/LoseScreen.js";
+
 let gametime = 180; // 3 minutes
 const timerdisplay = document.querySelector("#chrono");
 
@@ -22,5 +25,3 @@ export const loseconditiontime = () => {
   }, 1000);
 };
 
-import { gamepaused } from "../ui/UIManager.js";
-import { showDefeat } from "../ui/LoseScreen.js";

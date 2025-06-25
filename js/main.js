@@ -1,5 +1,5 @@
 // main.js
-// ========== IMPORTS ========== //
+
 import { initBombControls } from "../js/entities/Bomb.js";
 import { initGameLoop } from "../js/core/GameLoop.js";
 import { initPlayer } from "../js/player/Player.js";
@@ -9,7 +9,6 @@ import { initWalls } from "./entities/Wall.js";
 import { initUI } from "./ui/UIManager.js";
 import { loseconditionhealth } from "./levels/LevelManager.js";
 
-// ========== INITIALIZATION ========== //
 function initGame() {
   initPlayer(); 
   initEnemies();

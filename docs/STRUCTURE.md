@@ -12,6 +12,7 @@
   │   ├── Bomb.js
   │   └── Wall.js
   ├── items/ 
+  │   ├── Damage_bonus.js
   │   └── Key.js
   ├── levels/        
   │   ├── LevelManager.js
